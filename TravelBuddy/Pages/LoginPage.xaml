@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:TravelBuddy.ViewModels"
+             x:Class="TravelBuddy.Pages.LoginPage"
+             x:DataType="viewModels:LoginViewModel">
+    
+    <Label Text="Login Page"/>
+    
+</ContentPage>

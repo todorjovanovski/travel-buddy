@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<pages:ContentPageBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pages="clr-namespace:TravelBuddy.Pages"
+             xmlns:viewModels="clr-namespace:TravelBuddy.ViewModels"
+             x:Class="TravelBuddy.Pages.TripsPage"
+             x:DataType="viewModels:TripsViewModel">
+    
+    <Label Text="Trips Page"/>
+    
+</pages:ContentPageBase>

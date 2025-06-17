@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace TravelBuddy.ViewModels.Base;
 
-public partial class BaseViewModel : ObservableObject, IBaseViewModel
+public partial class ViewModelBase : ObservableObject, IViewModelBase
 {
     [ObservableProperty] 
     private bool _isLoading;
@@ -13,7 +13,7 @@ public partial class BaseViewModel : ObservableObject, IBaseViewModel
     public IAsyncRelayCommand OnSleepAsyncCommand { get; }
     public IAsyncRelayCommand OnResumeAsyncCommand { get; }
     
-    public BaseViewModel()
+    public ViewModelBase()
     {
         OnAppearingAsyncCommand = new AsyncRelayCommand(async () =>
         {

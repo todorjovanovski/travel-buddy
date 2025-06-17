@@ -2,7 +2,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace TravelBuddy.ViewModels.Base;
 
-public interface IBaseViewModel
+public interface IViewModelBase
 {
     public IAsyncRelayCommand OnAppearingAsyncCommand { get; }
     public IAsyncRelayCommand OnDisappearingAsyncCommand { get; }

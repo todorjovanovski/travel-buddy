@@ -4,7 +4,7 @@ namespace TravelBuddy;
 
 public partial class App : Application
 {
-    private BaseContentPage? CurrentPage { get; set; }
+    private ContentPageBase? CurrentPage { get; set; }
     
     public App()
     {
@@ -20,7 +20,7 @@ public partial class App : Application
     
     private void OnPageAppearing(object? sender, Page e)
     {
-        if (e is BaseContentPage currentPage)
+        if (e is ContentPageBase currentPage)
         {
             CurrentPage = currentPage;
         }
