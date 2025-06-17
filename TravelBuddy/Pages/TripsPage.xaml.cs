@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TravelBuddy.ViewModels;
 
 namespace TravelBuddy.Pages;
 
 public partial class TripsPage
 {
-    public TripsPage()
+    public TripsPage(TripsViewModel viewModel)
     {
+        BindingContext = viewModel;
         InitializeComponent();
     }
 }

@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TravelBuddy.ViewModels;
 
 namespace TravelBuddy.Pages;
 
-public partial class LoginPage : ContentPage
+public partial class LoginPage
 {
-    public LoginPage()
+    public LoginPage(LoginViewModel viewModel)
     {
+        BindingContext = viewModel;
         InitializeComponent();
     }
 }

@@ -7,7 +7,7 @@
     FlyoutBehavior="Disabled"
     Title="TravelBuddy">
     
-    <TabBar>
+    <TabBar Route="Root">
         <ShellContent
             Title="Trips"
             ContentTemplate="{DataTemplate pages:TripsPage}"/>

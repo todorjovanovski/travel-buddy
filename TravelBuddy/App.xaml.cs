@@ -1,4 +1,4 @@
-﻿using TravelBuddy.Pages;
+﻿using TravelBuddy.Pages.Base;
 
 namespace TravelBuddy;
 

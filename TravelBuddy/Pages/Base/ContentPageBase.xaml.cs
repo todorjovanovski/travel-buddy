@@ -1,6 +1,6 @@
 using TravelBuddy.ViewModels.Base;
 
-namespace TravelBuddy.Pages;
+namespace TravelBuddy.Pages.Base;
 
 public partial class ContentPageBase : ContentPage
 {
