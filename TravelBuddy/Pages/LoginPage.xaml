@@ -8,6 +8,52 @@
              x:DataType="viewModels:LoginViewModel"
              Shell.TabBarIsVisible="False">
     
-    <Label Text="Login Page"/>
+    <Grid RowDefinitions="*, *">
+        <Grid
+            BackgroundColor="{StaticResource Primary}">
+            <Image
+                Source="logo"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"/>
+        </Grid>
+        <Border
+            Grid.Row="1">
+            <VerticalStackLayout>
+                <Label Text="Welcome back"/>
+                <Border
+                    StrokeShape="RoundRectangle 5"
+                    IsVisible="{Binding IsErrorVisible}">
+                    <Grid ColumnDefinitions="Auto, *">
+                        <Image Source="error"/>
+                        <Label Text="{Binding ErrorMessage}"/>
+                    </Grid>
+                </Border>
+                <Entry 
+                    Placeholder="Username or Email"
+                    Text="{Binding Email}"/>
+                <Entry 
+                    Text="{Binding Password}"
+                    Placeholder="Enter your password"
+                    IsPassword="True"/>
+                <Label Text="Forgot password?"/>
+                <Button 
+                    Text="Login"
+                    Command="{Binding LoginCommand}"/>
+                <HorizontalStackLayout
+                    HorizontalOptions="Center"
+                    Spacing="5">
+                    <Label Text="Don't have an account?"/>
+                    <Label Text="Create one.">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer 
+                                Command="{Binding CreateAccountCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+                <Label Text="OR"/>
+                <Button ImageSource="google" Text="Continue with Google"/>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
     
 </base:ContentPageBase>

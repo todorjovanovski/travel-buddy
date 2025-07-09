@@ -1,4 +1,7 @@
 ﻿using CommunityToolkit.Maui;
+using Firebase.Auth;
+using Firebase.Auth.Providers;
+using Firebase.Database;
 using Microsoft.Extensions.Logging;
 using TravelBuddy.Pages;
 using TravelBuddy.Services;
@@ -36,6 +39,7 @@ public static class MauiProgram
         builder.Services.AddTransientWithShellRoute<LoginPage, LoginViewModel>(nameof(LoginPage));
         builder.Services.AddTransientWithShellRoute<ProfilePage, ProfileViewModel>(nameof(ProfilePage));
         builder.Services.AddTransientWithShellRoute<TripsPage, TripsViewModel>(nameof(TripsPage));
+        builder.Services.AddTransientWithShellRoute<RegisterPage, RegisterViewModel>(nameof(RegisterPage));
 
         return builder;
     }
@@ -44,5 +48,21 @@ public static class MauiProgram
     {
         builder.Services.AddSingleton<INavigationService, NavigationService>();
         builder.Services.AddSingleton<IAlertService, AlertService>();
+        builder.Services.AddSingleton(new FirebaseAuthClient(new FirebaseAuthConfig
+        {
+            ApiKey = "",
+            AuthDomain = "",
+            Providers = [new EmailProvider(), new GoogleProvider()]
+        }));
+        builder.Services.AddSingleton(sp =>
+        {
+            var authClient = sp.GetRequiredService<FirebaseAuthClient>();
+            return new FirebaseClient(
+                "",
+                new FirebaseOptions
+                {
+                    AuthTokenAsyncFactory = () => Task.FromResult(authClient.User.Credential.IdToken)
+                });
+        });
     }
 }

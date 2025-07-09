@@ -1,51 +1,49 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Firebase.Auth;
-using TravelBuddy.Pages;
+using Firebase.Database;
 using TravelBuddy.Services.Interfaces;
 using TravelBuddy.ViewModels.Base;
 
 namespace TravelBuddy.ViewModels;
 
-public partial class LoginViewModel : ViewModelBase
+public partial class RegisterViewModel : ViewModelBase
 {
     private readonly INavigationService _navigationService;
     private readonly FirebaseAuthClient _firebaseAuthClient;
+    
+    [ObservableProperty]
+    private string _fullName = string.Empty;
     
     [ObservableProperty]
     private string _email = string.Empty;
     
     [ObservableProperty]
     private string _password = string.Empty;
+    
 
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsErrorVisible))]
-    private string _errorMessage = string.Empty;
-    
-    public bool IsErrorVisible => !string.IsNullOrWhiteSpace(ErrorMessage);
-    
-    public LoginViewModel(INavigationService navigationService, FirebaseAuthClient firebaseAuthClient)
+    public RegisterViewModel(INavigationService navigationService, FirebaseAuthClient firebaseAuthClient, FirebaseClient firebaseDbClient)
     {
         _navigationService = navigationService;
         _firebaseAuthClient = firebaseAuthClient;
     }
 
     [RelayCommand]
-    private async Task Login()
+    private async Task SignUp()
     {
         try
         {
-            await _firebaseAuthClient.SignInWithEmailAndPasswordAsync(Email, Password);
+            await _firebaseAuthClient.CreateUserWithEmailAndPasswordAsync(Email, Password, FullName);
         }
         catch (Exception e)
         {
-            ErrorMessage = e.Message;
+            Console.WriteLine(e);
         }
     }
 
     [RelayCommand]
-    private async Task CreateAccount()
+    private async Task GoToLogin()
     {
-        await _navigationService.GoToAsync(nameof(RegisterPage));
+        await _navigationService.GoBackAsync();
     }
 }

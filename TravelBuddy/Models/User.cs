@@ -2,7 +2,7 @@ namespace TravelBuddy.Models;
 
 public class User
 {
-    public Guid Id { get; set; } = Guid.Empty;
+    public string Id { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public int Age { get; set; }
     public string Bio { get; set; } = string.Empty;

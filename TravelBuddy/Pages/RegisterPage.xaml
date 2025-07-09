@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:TravelBuddy.ViewModels"
+             x:Class="TravelBuddy.Pages.RegisterPage"
+             x:DataType="viewModels:RegisterViewModel"
+             Shell.TabBarIsVisible="False">
+    
+    <Grid RowDefinitions="1*, 2*">
+        <Grid
+            BackgroundColor="{StaticResource Primary}">
+            <Image
+                Source="logo"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"/>
+        </Grid>
+        <Border
+            Grid.Row="1">
+            <VerticalStackLayout>
+                <Label 
+                    Text="Create your account"/>
+                <Label 
+                    Text="Full name"/>
+                <Entry 
+                    Placeholder="Enter your full name"
+                    Text="{Binding FullName}"/>
+                <Label 
+                    Text="Email"/>
+                <Entry 
+                    Placeholder="Enter your email address"
+                    Text="{Binding Email}"/>
+                <Label 
+                    Text="Password"/>
+                <Entry 
+                    Placeholder="Enter your password"
+                    Text="{Binding Password}"
+                    IsPassword="True"/>
+                <Label Text="Forgot password?"/>
+                <HorizontalStackLayout>
+                    <CheckBox/>
+                    <Label 
+                        Text="I agree to the "
+                        VerticalTextAlignment="Center"/>
+                    <Label 
+                        Text="Terms &amp; Conditions "
+                        VerticalTextAlignment="Center"/>
+                    <Label 
+                        Text="and "
+                        VerticalTextAlignment="Center"/>
+                    <Label 
+                        Text="Privacy Policy"
+                        VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
+                <Button 
+                    Text="Sign Up" 
+                    Command="{Binding SignUpCommand}"/>
+                <HorizontalStackLayout
+                    HorizontalOptions="Center"
+                    Spacing="5">
+                    <Label Text="Already have an account?"/>
+                    <Label Text="Sign in.">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer 
+                                Command="{Binding GoToLoginCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+    
+</ContentPage>
