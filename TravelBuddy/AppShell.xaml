@@ -6,19 +6,27 @@
     xmlns:pages="clr-namespace:TravelBuddy.Pages"
     FlyoutBehavior="Disabled"
     Title="TravelBuddy"
-    NavBarIsVisible="False">
+    NavBarIsVisible="False"
+    TabBarTitleColor="{StaticResource Primary}"
+    TabBarForegroundColor="{StaticResource Primary}">
     
-    <TabBar Route="Root">
+    <TabBar>
         <ShellContent
             Title="Trips"
-            ContentTemplate="{DataTemplate pages:TripsPage}"/>
+            Icon="trips"
+            ContentTemplate="{DataTemplate pages:TripsPage}"
+            Route="TripsPage"/>
         <ShellContent
             x:Name="Home"
+            Icon="home"
             Title="Home"
-            ContentTemplate="{DataTemplate pages:HomePage}"/>
+            ContentTemplate="{DataTemplate pages:HomePage}"
+            Route="HomePage"/>
         <ShellContent
             Title="Profile"
-            ContentTemplate="{DataTemplate pages:ProfilePage}"/>
+            Icon="profile"
+            ContentTemplate="{DataTemplate pages:ProfilePage}"
+            Route="ProfilePage"/>
     </TabBar>
 
 </Shell>

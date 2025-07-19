@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Firebase.Auth;
 using TravelBuddy.Pages;
 using TravelBuddy.Services.Interfaces;
+using TravelBuddy.Utils;
 using TravelBuddy.ViewModels.Base;
 
 namespace TravelBuddy.ViewModels;
@@ -10,7 +11,7 @@ namespace TravelBuddy.ViewModels;
 public partial class LoginViewModel : ViewModelBase
 {
     private readonly INavigationService _navigationService;
-    private readonly FirebaseAuthClient _firebaseAuthClient;
+    private readonly IFirebaseAuthClient _firebaseAuthClient;
     
     [ObservableProperty]
     private string _email = string.Empty;
@@ -24,7 +25,7 @@ public partial class LoginViewModel : ViewModelBase
     
     public bool IsErrorVisible => !string.IsNullOrWhiteSpace(ErrorMessage);
     
-    public LoginViewModel(INavigationService navigationService, FirebaseAuthClient firebaseAuthClient)
+    public LoginViewModel(INavigationService navigationService, IFirebaseAuthClient firebaseAuthClient)
     {
         _navigationService = navigationService;
         _firebaseAuthClient = firebaseAuthClient;
@@ -35,7 +36,13 @@ public partial class LoginViewModel : ViewModelBase
     {
         try
         {
+            ErrorMessage = string.Empty;
             await _firebaseAuthClient.SignInWithEmailAndPasswordAsync(Email, Password);
+            await _navigationService.GoBackAsync();
+        }
+        catch (FirebaseAuthException e)
+        {
+            ErrorMessage = e.Reason.ToReadableString();
         }
         catch (Exception e)
         {
@@ -46,6 +53,14 @@ public partial class LoginViewModel : ViewModelBase
     [RelayCommand]
     private async Task CreateAccount()
     {
+        ClearValues();
         await _navigationService.GoToAsync(nameof(RegisterPage));
+    }
+
+    private void ClearValues()
+    {
+        Email = string.Empty;
+        Password = string.Empty;
+        ErrorMessage = string.Empty;
     }
 }

@@ -7,6 +7,6 @@
              x:Class="TravelBuddy.Pages.HomePage"
              x:DataType="viewModels:HomeViewModel">
     
-    <Button Text="Home Page" Command="{Binding GoToLoginCommand}"/>
+    <Label Text="Home Page"/>
     
 </base:ContentPageBase>

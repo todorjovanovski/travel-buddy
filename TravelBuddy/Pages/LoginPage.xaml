@@ -4,54 +4,131 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:TravelBuddy.ViewModels"
              xmlns:base="clr-namespace:TravelBuddy.Pages.Base"
+             xmlns:controls="clr-namespace:TravelBuddy.Controls"
              x:Class="TravelBuddy.Pages.LoginPage"
              x:DataType="viewModels:LoginViewModel"
              Shell.TabBarIsVisible="False">
     
-    <Grid RowDefinitions="*, *">
-        <Grid
-            BackgroundColor="{StaticResource Primary}">
+    <Grid 
+        RowDefinitions="1*, 2*"
+        Background="{StaticResource Secondary}">
+        <Grid>
             <Image
                 Source="logo"
                 HorizontalOptions="Center"
                 VerticalOptions="Center"/>
         </Grid>
         <Border
-            Grid.Row="1">
-            <VerticalStackLayout>
-                <Label Text="Welcome back"/>
+            Grid.Row="1"
+            StrokeShape="RoundRectangle 20 20 0 0"
+            Padding="20"
+            BackgroundColor="White">
+            <VerticalStackLayout
+                Spacing="10">
+                <Label 
+                    Text="Welcome back"
+                    FontFamily="PoppinsRegular"
+                    FontSize="20"
+                    Margin="0, 10"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center"/>
+                
                 <Border
-                    StrokeShape="RoundRectangle 5"
+                    Stroke="DarkRed"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="10"
+                    BackgroundColor="#5AFFB6C1"
                     IsVisible="{Binding IsErrorVisible}">
-                    <Grid ColumnDefinitions="Auto, *">
-                        <Image Source="error"/>
-                        <Label Text="{Binding ErrorMessage}"/>
+                    <Grid
+                        ColumnDefinitions="1*, 9*"
+                        ColumnSpacing="10"
+                        Padding="5">
+                        <Image 
+                            Source="error"
+                            VerticalOptions="Center"/>
+                        <Label 
+                            Grid.Column="1"
+                            Text="{Binding ErrorMessage}"
+                            TextColor="DarkRed"
+                            FontFamily="PoppinsRegular"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Center"/>
                     </Grid>
                 </Border>
-                <Entry 
-                    Placeholder="Username or Email"
-                    Text="{Binding Email}"/>
-                <Entry 
-                    Text="{Binding Password}"
-                    Placeholder="Enter your password"
-                    IsPassword="True"/>
-                <Label Text="Forgot password?"/>
+                
+                <Border
+                    Stroke="LightGray"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="10">
+                    <controls:BorderlessEntry 
+                        Placeholder="Username or Email"
+                        Text="{Binding Email}"
+                        FontFamily="PoppinsRegular"/>
+                </Border>
+                
+                <Border
+                    Stroke="LightGray"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="10">
+                    <controls:BorderlessEntry 
+                        Text="{Binding Password}"
+                        Placeholder="Enter your password"
+                        IsPassword="True"
+                        FontFamily="PoppinsRegular"/>
+                </Border>
+                
+                <Label 
+                    Text="Forgot password?"
+                    TextColor="{StaticResource Primary}"
+                    FontFamily="PoppinsRegular"
+                    FontAttributes="Bold"
+                    Padding="5"/>
+                
                 <Button 
                     Text="Login"
-                    Command="{Binding LoginCommand}"/>
+                    Command="{Binding LoginCommand}"
+                    FontFamily="PoppinsRegular"
+                    FontAttributes="Bold"/>
+                
                 <HorizontalStackLayout
                     HorizontalOptions="Center"
                     Spacing="5">
-                    <Label Text="Don't have an account?"/>
-                    <Label Text="Create one.">
+                    <Label 
+                        Text="Don't have an account?"
+                        FontFamily="PoppinsRegular"/>
+                    <Label 
+                        Text="Create one."
+                        FontFamily="PoppinsRegular"
+                        FontAttributes="Bold"
+                        TextColor="{StaticResource Primary}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer 
                                 Command="{Binding CreateAccountCommand}"/>
                         </Label.GestureRecognizers>
                     </Label>
                 </HorizontalStackLayout>
-                <Label Text="OR"/>
-                <Button ImageSource="google" Text="Continue with Google"/>
+                
+                <Grid>
+                    <Border 
+                        Stroke="LightGray"
+                        StrokeThickness="1"
+                        HeightRequest="1"
+                        Margin="5"/>
+                    <Label 
+                        Text="OR"
+                        Padding="10"
+                        HorizontalOptions="Center"
+                        FontFamily="PoppinsRegular"
+                        BackgroundColor="White"/>
+                </Grid>
+                
+                <Button 
+                    ImageSource="google" 
+                    Text="Continue with Google"
+                    FontFamily="PoppinsRegular"
+                    FontAttributes="Bold"/>
             </VerticalStackLayout>
         </Border>
     </Grid>

@@ -4,9 +4,204 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:TravelBuddy.ViewModels"
              xmlns:base="clr-namespace:TravelBuddy.Pages.Base"
+             xmlns:models="clr-namespace:TravelBuddy.Models"
+             xmlns:converters="clr-namespace:TravelBuddy.Converters"
              x:Class="TravelBuddy.Pages.ProfilePage"
              x:DataType="viewModels:ProfileViewModel">
     
-    <Label Text="Profile Page"/>
+    <ContentPage.Resources>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    </ContentPage.Resources>
+    
+    <ScrollView
+        VerticalScrollBarVisibility="Never"
+        HorizontalScrollBarVisibility="Never"
+        Background="{StaticResource Secondary}"
+        Padding="10">
+        <Grid>
+            <VerticalStackLayout
+                IsVisible="{Binding IsUserAnonymous, Converter={StaticResource InverseBooleanConverter}}"
+                Spacing="10">
+                <Grid 
+                    x:Name="PhotosGrid"
+                    SizeChanged="PhotosGridOnSizeChanged">
+                    <Border
+                        Stroke="{StaticResource Blue50}"
+                        StrokeShape="RoundRectangle 10">
+                        <Grid>
+                            <Border 
+                                StrokeShape="RoundRectangle 5"
+                                StrokeThickness="0"
+                                Padding="3"
+                                Margin="10"
+                                BackgroundColor="#64000000"
+                                VerticalOptions="End"
+                                HorizontalOptions="Fill"
+                                ZIndex="2">
+                                <IndicatorView
+                                    x:Name="IndicatorView"
+                                    SelectedIndicatorColor="{x:StaticResource White}"
+                                    IndicatorColor="{StaticResource Gray400}"
+                                    HorizontalOptions="Center">
+                                    <IndicatorView.IndicatorTemplate>
+                                        <DataTemplate>
+                                            <Border
+                                                StrokeShape="RoundRectangle 2"
+                                                StrokeThickness="0"
+                                                HeightRequest="5"
+                                                WidthRequest="{Binding IndicatorLength,
+                                                Source={RelativeSource AncestorType={x:Type viewModels:ProfileViewModel}}}"/>
+                                        </DataTemplate>
+                                    </IndicatorView.IndicatorTemplate>
+                                </IndicatorView>
+                            </Border>
+                            
+                            <CarouselView 
+                                ItemsSource="{Binding Photos}"
+                                IsScrolling="False"
+                                Loop="False"
+                                IndicatorView="IndicatorView"
+                                HorizontalScrollBarVisibility="Never">
+                                <CarouselView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:ProfilePhoto">
+                                        <Image 
+                                            Source="{Binding Url}"
+                                            Aspect="AspectFill"/>
+                                    </DataTemplate>
+                                </CarouselView.ItemTemplate>
+                            </CarouselView>
+                        </Grid>
+                    </Border>
+                    <Border
+                        Stroke="Transparent"
+                        StrokeShape="RoundRectangle 10"
+                        BackgroundColor="{StaticResource Blue50}"
+                        IsVisible="{Binding ArePhotosEmpty}">
+                        <Grid 
+                            RowDefinitions="2*, 5*, 1*, 2"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center">
+                            <Image
+                                Grid.Row="1"
+                                Opacity="0.6"
+                                Source="add_photos"
+                                HorizontalOptions="Center"
+                                VerticalOptions="End"/>
+                            <Label
+                                Grid.Row="2"
+                                Text="Add profile photos."
+                                TextColor="{StaticResource Primary}"
+                                FontFamily="PoppinsRegular"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Start">
+                            </Label>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding AddPhotosCommand}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </Border>
+                </Grid>
+                <Border
+                    StrokeShape="RoundRectangle 10"
+                    StrokeThickness="0"
+                    Padding="20"
+                    BackgroundColor="White">
+                    <VerticalStackLayout 
+                        Spacing="15">
+                        <Label 
+                            Text="{Binding NameAndAge}"
+                            FontFamily="PoppinsRegular"
+                            FontSize="24"
+                            FontAttributes="Bold"/>
+                        <VerticalStackLayout Spacing="5">
+                            <Label
+                                Text="About me"
+                                FontFamily="PoppinsRegular"
+                                FontAttributes="Bold"/>
+                            <Label 
+                                Text="{Binding Bio}"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Spacing="5">
+                            <Label 
+                                Text="Interests"
+                                FontFamily="PoppinsRegular"
+                                FontAttributes="Bold"></Label>
+                            <Border
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 5"
+                                Padding="10"
+                                BackgroundColor="{StaticResource Blue50}">
+                                <CollectionView
+                                    ItemsSource="{Binding Activities}">
+                                    <CollectionView.ItemsLayout>
+                                        <GridItemsLayout 
+                                            Span="3"
+                                            Orientation="Vertical"
+                                            VerticalItemSpacing="10"
+                                            HorizontalItemSpacing="10"/>
+                                    </CollectionView.ItemsLayout>
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate x:DataType="models:Activity">
+                                            <Border
+                                                StrokeThickness="0"
+                                                StrokeShape="RoundRectangle 5"
+                                                BackgroundColor="White"
+                                                Padding="5">
+                                                <Label
+                                                    Text="{Binding .}"
+                                                    FontFamily="PoppinsRegular"
+                                                    HorizontalOptions="Center"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </Border>
+                        </VerticalStackLayout>
+                        <Button
+                            Text="Log out"
+                            Command="{Binding LogOutCommand}"></Button>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+            <Border
+                StrokeShape="RoundRectangle 10"
+                StrokeThickness="0">
+                <Grid 
+                    BackgroundColor="White"
+                    IsVisible="{Binding IsUserAnonymous}">
+                    <Label 
+                        Text="Sign in to view your profile page..."
+                        FontSize="24"
+                        TextColor="{StaticResource Gray200}"
+                        FontFamily="PoppinsRegular"
+                        FontAttributes="Bold"
+                        HorizontalTextAlignment="Center"
+                        VerticalTextAlignment="Center">
+                    </Label>
+                    <Button
+                        Text="Sign in"
+                        Margin="10"
+                        FontFamily="PoppinsRegular"
+                        FontAttributes="Bold"
+                        VerticalOptions="End"
+                        BackgroundColor="{StaticResource Primary}"
+                        Command="{Binding GoToLoginCommand}"/>
+                </Grid>
+            </Border>
+            
+            <Border
+                StrokeShape="RoundRectangle 10"
+                StrokeThickness=" 0">
+                <Grid 
+                    BackgroundColor="White"
+                    IsVisible="{Binding IsLoading}">
+                    <ActivityIndicator 
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        IsRunning="{Binding IsLoading}"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </ScrollView>
     
 </base:ContentPageBase>

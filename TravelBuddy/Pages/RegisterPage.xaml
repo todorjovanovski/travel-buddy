@@ -3,63 +3,138 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:TravelBuddy.ViewModels"
+             xmlns:controls="clr-namespace:TravelBuddy.Controls"
              x:Class="TravelBuddy.Pages.RegisterPage"
              x:DataType="viewModels:RegisterViewModel"
              Shell.TabBarIsVisible="False">
     
-    <Grid RowDefinitions="1*, 2*">
-        <Grid
-            BackgroundColor="{StaticResource Primary}">
+    <Grid 
+        RowDefinitions="1*, 2*"
+        Background="{StaticResource Secondary}">
+        <Grid>
             <Image
                 Source="logo"
                 HorizontalOptions="Center"
                 VerticalOptions="Center"/>
         </Grid>
         <Border
-            Grid.Row="1">
-            <VerticalStackLayout>
+            Grid.Row="1"
+            StrokeShape="RoundRectangle 20 20 0 0"
+            Padding="20"
+            BackgroundColor="White">
+            <VerticalStackLayout
+                Spacing="10">
+                
                 <Label 
-                    Text="Create your account"/>
-                <Label 
-                    Text="Full name"/>
-                <Entry 
-                    Placeholder="Enter your full name"
-                    Text="{Binding FullName}"/>
-                <Label 
-                    Text="Email"/>
-                <Entry 
-                    Placeholder="Enter your email address"
-                    Text="{Binding Email}"/>
-                <Label 
-                    Text="Password"/>
-                <Entry 
-                    Placeholder="Enter your password"
-                    Text="{Binding Password}"
-                    IsPassword="True"/>
-                <Label Text="Forgot password?"/>
+                    Text="Create your account"
+                    FontFamily="PoppinsRegular"
+                    FontSize="20"
+                    Margin="0, 10"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center"/>
+                
+                <Border
+                    Stroke="DarkRed"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="10"
+                    BackgroundColor="#5AFFB6C1"
+                    IsVisible="{Binding IsErrorMessageVisible}">
+                    <Grid
+                        ColumnDefinitions="1*, 9*"
+                        ColumnSpacing="10"
+                        Padding="5">
+                        <Image 
+                            Source="error"
+                            VerticalOptions="Center"/>
+                        <Label 
+                            Grid.Column="1"
+                            Text="{Binding ErrorMessage}"
+                            TextColor="DarkRed"
+                            FontFamily="PoppinsRegular"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+                
+                <Border
+                    Stroke="LightGray"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="10">
+                    <controls:BorderlessEntry 
+                        Placeholder="Enter your full name"
+                        Text="{Binding FullName}"
+                        FontFamily="PoppinsRegular"/>
+                </Border>
+                
+                <Border
+                    Stroke="LightGray"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="10">
+                    <controls:BorderlessEntry 
+                        Placeholder="Enter your email address"
+                        Text="{Binding Email}"
+                        FontFamily="PoppinsRegular"/>
+                </Border>
+                
+                <Border
+                    Stroke="LightGray"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="10">
+                    <controls:BorderlessEntry 
+                        Placeholder="Enter your password"
+                        Text="{Binding Password}"
+                        FontFamily="PoppinsRegular"
+                        IsPassword="True"/>
+                </Border>
+                
                 <HorizontalStackLayout>
-                    <CheckBox/>
+                    <CheckBox 
+                        IsChecked="{Binding AgreeToTermsAndConditions}"/>
                     <Label 
                         Text="I agree to the "
-                        VerticalTextAlignment="Center"/>
+                        FontFamily="PoppinsRegular"
+                        VerticalTextAlignment="Center"
+                        FontSize="12"/>
                     <Label 
                         Text="Terms &amp; Conditions "
-                        VerticalTextAlignment="Center"/>
+                        FontFamily="PoppinsRegular"
+                        FontAttributes="Bold"
+                        TextColor="{StaticResource Primary}"
+                        VerticalTextAlignment="Center"
+                        FontSize="12"/>
                     <Label 
                         Text="and "
-                        VerticalTextAlignment="Center"/>
+                        FontFamily="PoppinsRegular"
+                        VerticalTextAlignment="Center"
+                        FontSize="12"/>
                     <Label 
-                        Text="Privacy Policy"
-                        VerticalTextAlignment="Center"/>
+                        Text="Privacy Policy."
+                        FontFamily="PoppinsRegular"
+                        FontAttributes="Bold"
+                        TextColor="{StaticResource Primary}"
+                        VerticalTextAlignment="Center"
+                        FontSize="12"/>
                 </HorizontalStackLayout>
                 <Button 
                     Text="Sign Up" 
-                    Command="{Binding SignUpCommand}"/>
+                    FontFamily="PoppinsRegular"
+                    FontAttributes="Bold"
+                    IsEnabled="{Binding AgreeToTermsAndConditions}"
+                    Command="{Binding RegisterCommand}"/>
                 <HorizontalStackLayout
                     HorizontalOptions="Center"
                     Spacing="5">
-                    <Label Text="Already have an account?"/>
-                    <Label Text="Sign in.">
+                    <Label 
+                        Text="Already have an account?"
+                        FontFamily="PoppinsRegular"/>
+                    <Label 
+                        Text="Sign in."
+                        FontAttributes="Bold"
+                        FontFamily="PoppinsRegular"
+                        TextColor="{StaticResource Primary}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer 
                                 Command="{Binding GoToLoginCommand}"/>

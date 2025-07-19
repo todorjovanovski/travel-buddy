@@ -1,8 +1,11 @@
 ﻿using CommunityToolkit.Maui;
 using Firebase.Auth;
 using Firebase.Auth.Providers;
-using Firebase.Database;
+using Firebase.Auth.Repository;
 using Microsoft.Extensions.Logging;
+using TravelBuddy.Constants;
+using TravelBuddy.Controls;
+using TravelBuddy.Handlers;
 using TravelBuddy.Pages;
 using TravelBuddy.Services;
 using TravelBuddy.Services.Interfaces;
@@ -22,9 +25,11 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                fonts.AddFont("Poppins-Regular.ttf",  "PoppinsRegular");
             })
             .RegisterPagesWithViewModels()
-            .RegisterServices();
+            .RegisterServices()
+            .ConfigureMauiHandlers(ConfigureHandlers);
 
 #if DEBUG
         builder.Logging.AddDebug();
@@ -35,34 +40,35 @@ public static class MauiProgram
     
     public static MauiAppBuilder RegisterPagesWithViewModels(this MauiAppBuilder builder)
     {
-        builder.Services.AddTransientWithShellRoute<HomePage, HomeViewModel>(nameof(HomePage));
+        builder.Services.AddTransient<HomeViewModel>();
+        builder.Services.AddTransient<ProfileViewModel>();
+        builder.Services.AddTransient<TripsViewModel>();
         builder.Services.AddTransientWithShellRoute<LoginPage, LoginViewModel>(nameof(LoginPage));
-        builder.Services.AddTransientWithShellRoute<ProfilePage, ProfileViewModel>(nameof(ProfilePage));
-        builder.Services.AddTransientWithShellRoute<TripsPage, TripsViewModel>(nameof(TripsPage));
         builder.Services.AddTransientWithShellRoute<RegisterPage, RegisterViewModel>(nameof(RegisterPage));
+        builder.Services.AddTransientWithShellRoute<CompleteProfilePage, CompleteProfileViewModel>(nameof(CompleteProfilePage));
 
         return builder;
     }
     
-    private static void RegisterServices(this MauiAppBuilder builder)
+    private static MauiAppBuilder RegisterServices(this MauiAppBuilder builder)
     {
         builder.Services.AddSingleton<INavigationService, NavigationService>();
         builder.Services.AddSingleton<IAlertService, AlertService>();
-        builder.Services.AddSingleton(new FirebaseAuthClient(new FirebaseAuthConfig
+        builder.Services.AddSingleton<IFirebaseDbService, FirebaseDbService>();
+        builder.Services.AddSingleton<IFirebaseAuthClient>(new FirebaseAuthClient(new FirebaseAuthConfig
         {
-            ApiKey = "",
-            AuthDomain = "",
-            Providers = [new EmailProvider(), new GoogleProvider()]
+            ApiKey = FirebaseConstants.AuthApiKey,
+            AuthDomain = FirebaseConstants.AuthDomain,
+            Providers = [new EmailProvider(), new GoogleProvider()],
+            UserRepository = new FileUserRepository("travel-buddy-auth")
         }));
-        builder.Services.AddSingleton(sp =>
-        {
-            var authClient = sp.GetRequiredService<FirebaseAuthClient>();
-            return new FirebaseClient(
-                "",
-                new FirebaseOptions
-                {
-                    AuthTokenAsyncFactory = () => Task.FromResult(authClient.User.Credential.IdToken)
-                });
-        });
+        return builder;
+    }
+    
+    private static void ConfigureHandlers(IMauiHandlersCollection handlersCollection)
+    {
+        handlersCollection.AddHandler<BorderlessEntry, CustomEntryHandler>();
+        handlersCollection.AddHandler<BorderlessDatePicker, CustomDatePickerHandler>();
+        handlersCollection.AddHandler<BorderlessEditor, CustomEditorHandler>();
     }
 }

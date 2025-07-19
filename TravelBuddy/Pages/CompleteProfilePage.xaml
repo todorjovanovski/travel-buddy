@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:TravelBuddy.Models"
+             xmlns:viewModels="clr-namespace:TravelBuddy.ViewModels"
+             xmlns:controls="clr-namespace:TravelBuddy.Controls"
+             x:Class="TravelBuddy.Pages.CompleteProfilePage"
+             x:DataType="viewModels:CompleteProfileViewModel"
+             Shell.TabBarIsVisible="False">
+    
+    <ContentPage.Resources>
+        <Style TargetType="Border">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="White" />
+                                <Setter Property="Padding"
+                                        Value="10"/>
+                                <Setter Property="Stroke"
+                                        Value="{StaticResource Blue200}"/>
+                                <Setter Property="StrokeShape"
+                                        Value="RoundRectangle 5"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="#7D539DF3" />
+                                <Setter Property="Padding"
+                                        Value="10"/>
+                                <Setter Property="Stroke"
+                                        Value="{StaticResource Blue200}"/>
+                                <Setter Property="StrokeShape"
+                                        Value="RoundRectangle 5"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
+    
+    <Grid
+        RowDefinitions="1*, 5*"
+        Background="{StaticResource Secondary}">
+        <Grid>
+            <Image
+                Source="logo"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"/>
+        </Grid>
+        <Border
+            Grid.Row="1"
+            StrokeShape="RoundRectangle 20 20 0 0"
+            Padding="20"
+            BackgroundColor="White">
+            <ScrollView
+                VerticalScrollBarVisibility="Never">
+                <VerticalStackLayout
+                    Spacing="10">
+                    <Label 
+                        Text="Complete your profile"
+                        FontFamily="PoppinsRegular"
+                        FontSize="20"
+                        FontAttributes="Bold"
+                        HorizontalOptions="Center"
+                        Padding="0, 10"/>
+                    
+                    <VerticalStackLayout>
+                        <Label 
+                            Text="Birthdate"
+                            FontFamily="PoppinsRegular"
+                            Padding="5, 0"/>
+                        <Border
+                            Stroke="LightGray"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 10"
+                            Padding="10">
+                            <controls:BorderlessDatePicker 
+                                Date="{Binding Birthdate}"
+                                MinimumDate="{Binding MinimumDate}"
+                                MaximumDate="{Binding MaximumDate}"
+                                Format="dd.MM.yyyy"
+                                FontFamily="PoppinsRegular"/>
+                        </Border>
+                    </VerticalStackLayout>
+                    
+                    <VerticalStackLayout>
+                        <Label 
+                            Text="Location"
+                            FontFamily="PoppinsRegular"
+                            Padding="5, 0"/>
+                        <Border
+                            Stroke="LightGray"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 10"
+                            Padding="10">
+                            <controls:BorderlessEntry  
+                                Placeholder="Enter your location"
+                                Text="{Binding Location}"/>
+                        </Border>
+                    </VerticalStackLayout>
+                    
+                    <VerticalStackLayout>
+                        <Label 
+                            Text="Bio"
+                            FontFamily="PoppinsRegular"
+                            Padding="5, 0"/>
+                        <Border
+                            Stroke="LightGray"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 10"
+                            Padding="10">
+                            <controls:BorderlessEditor 
+                                Placeholder="Tell us something about yourself"
+                                Text="{Binding Bio}"
+                                AutoSize="TextChanges"/>
+                        </Border>
+                    </VerticalStackLayout>
+                    
+                    <VerticalStackLayout>
+                        <Label 
+                        Text="Favorite activities"
+                        FontFamily="PoppinsRegular"
+                        Padding="5, 0"/>
+                        <Border
+                            Stroke="{StaticResource Blue200}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 10"
+                            Padding="10"
+                            BackgroundColor="{StaticResource Blue50}">
+                            <CollectionView
+                                ItemsSource="{Binding Activities}"
+                                SelectedItems="{Binding SelectedActivities, Mode=TwoWay}"
+                                SelectionMode="Multiple">
+                                <CollectionView.ItemsLayout>
+                                    <GridItemsLayout 
+                                        Span="2"
+                                        Orientation="Vertical"
+                                        VerticalItemSpacing="10"
+                                        HorizontalItemSpacing="10"/>
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:Activity">
+                                        <Border>
+                                            <Label
+                                                Text="{Binding .}"
+                                                FontFamily="PoppinsRegular"
+                                                HorizontalOptions="Center"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </Border>
+                    </VerticalStackLayout>
+                    <Grid
+                        Margin="5, 15"
+                        ColumnDefinitions="*, *">
+                        <Label
+                            Text="Skip for now"
+                            TextColor="Gray"
+                            FontFamily="PoppinsRegular"
+                            HorizontalOptions="Start">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                        <Label 
+                            Grid.Column="1"
+                            HorizontalOptions="End"
+                            Text="Save and complete"
+                            TextColor="{StaticResource Primary}"
+                            FontFamily="PoppinsRegular"
+                            FontAttributes="Bold">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SaveProfileCommand}"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+                    
+                </VerticalStackLayout>
+            </ScrollView>
+        </Border>
+    </Grid>
+    
+</ContentPage>

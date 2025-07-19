@@ -1,5 +1,3 @@
-using CommunityToolkit.Mvvm.Input;
-using TravelBuddy.Pages;
 using TravelBuddy.Services.Interfaces;
 using TravelBuddy.ViewModels.Base;
 
@@ -12,11 +10,5 @@ public partial class HomeViewModel : ViewModelBase
     public HomeViewModel(INavigationService navigationService)
     {
         _navigationService = navigationService;
-    }
-
-    [RelayCommand]
-    private async Task GoToLogin()
-    {
-        await _navigationService.GoToAsync(nameof(LoginPage));
     }
 }
