@@ -41,8 +41,7 @@
                                 <IndicatorView
                                     x:Name="IndicatorView"
                                     SelectedIndicatorColor="{x:StaticResource White}"
-                                    IndicatorColor="{StaticResource Gray400}"
-                                    HorizontalOptions="Center">
+                                    IndicatorColor="{StaticResource Gray400}">
                                     <IndicatorView.IndicatorTemplate>
                                         <DataTemplate>
                                             <Border
@@ -165,10 +164,10 @@
             </VerticalStackLayout>
             <Border
                 StrokeShape="RoundRectangle 10"
-                StrokeThickness="0">
-                <Grid 
-                    BackgroundColor="White"
-                    IsVisible="{Binding IsUserAnonymous}">
+                StrokeThickness="0"
+                BackgroundColor="White"
+                IsVisible="{Binding IsUserAnonymous}">
+                <Grid>
                     <Label 
                         Text="Sign in to view your profile page..."
                         FontSize="24"
@@ -191,15 +190,13 @@
             
             <Border
                 StrokeShape="RoundRectangle 10"
-                StrokeThickness=" 0">
-                <Grid 
-                    BackgroundColor="White"
-                    IsVisible="{Binding IsLoading}">
-                    <ActivityIndicator 
-                        HorizontalOptions="Center"
-                        VerticalOptions="Center"
-                        IsRunning="{Binding IsLoading}"/>
-                </Grid>
+                StrokeThickness=" 0"
+                IsVisible="{Binding IsLoading}"
+                BackgroundColor="White">
+                <ActivityIndicator 
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    IsRunning="{Binding IsLoading}"/>
             </Border>
         </Grid>
     </ScrollView>

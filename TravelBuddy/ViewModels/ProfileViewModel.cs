@@ -122,6 +122,6 @@ public partial class ProfileViewModel : ViewModelBase
 
     public void CalculateIndicatorLength(double photosGridWidth)
     {
-        IndicatorLength = (photosGridWidth - 20) / Photos.Count - Photos.Count * 2;
+        IndicatorLength = (photosGridWidth - 26) / Photos.Count - Photos.Count * 2;
     }
 }
