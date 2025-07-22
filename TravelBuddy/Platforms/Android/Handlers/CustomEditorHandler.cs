@@ -18,7 +18,9 @@ public partial class CustomEditorHandler
     }
 
     void RemoveUnderline(AppCompatEditText editText)
-        => editText.BackgroundTintList = ColorStateList.ValueOf(Color.Transparent);
+    {
+        editText.BackgroundTintList = ColorStateList.ValueOf(Color.Transparent);
+    }
 
     void RemovePadding(AppCompatEditText editText)
     {

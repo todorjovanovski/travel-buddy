@@ -9,5 +9,6 @@ public class User
     public Location Location { get; set; } = new();
     public List<Activity> FavoriteActivities { get; set; } = [];
     public List<ProfilePhoto> ProfilePhotos { get; set; } = [];
+    public List<Guid> TripIds { get; set; } = [];
     public int Age => (int) DateTime.UtcNow.Subtract(Birthdate).TotalDays / 365;
 }

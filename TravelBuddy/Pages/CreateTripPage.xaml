@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:TravelBuddy.Controls"
+             xmlns:viewModels="clr-namespace:TravelBuddy.ViewModels"
+             xmlns:models="clr-namespace:TravelBuddy.Models"
+             x:Class="TravelBuddy.Pages.CreateTripPage"
+             x:DataType="viewModels:CreateTripViewModel"
+             Background="{StaticResource Secondary}">
+    
+    <ContentPage.Resources>
+        <Style TargetType="Border">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="White" />
+                                <Setter Property="Padding"
+                                        Value="10"/>
+                                <Setter Property="Stroke"
+                                        Value="{StaticResource Blue200}"/>
+                                <Setter Property="StrokeShape"
+                                        Value="RoundRectangle 5"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="#7D539DF3" />
+                                <Setter Property="Padding"
+                                        Value="10"/>
+                                <Setter Property="Stroke"
+                                        Value="{StaticResource Blue200}"/>
+                                <Setter Property="StrokeShape"
+                                        Value="RoundRectangle 5"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
+    
+    <Border
+        StrokeShape="RoundRectangle 10"
+        StrokeThickness="0"
+        Margin="10"
+        Padding="0">
+        <Grid>
+            <ScrollView
+                Padding="20"
+                HorizontalScrollBarVisibility="Never"
+                VerticalScrollBarVisibility="Never">
+                <Border
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="0">
+                    <VerticalStackLayout
+                        Spacing="15">
+                        <Label
+                            Text="Create a new trip"
+                            FontSize="24"
+                            FontFamily="PoppinsRegular"
+                            FontAttributes="Bold"/>
+                        
+                        <Border
+                            Stroke="{StaticResource Blue200}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 10"
+                            Padding="10"
+                            BackgroundColor="{StaticResource Blue50}">
+                            <Grid
+                                ColumnDefinitions="auto, *">
+                                <Image 
+                                    Source="signpost"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"/>
+                                <controls:BorderlessEntry
+                                    Grid.Column="1"
+                                    Text="{Binding Title}"
+                                    FontFamily="PoppinsRegular"
+                                    Placeholder="Give your adventure a name."
+                                    Margin="10, 0, 0, 0"/>
+                            </Grid>
+                        </Border>
+                        
+                        <Border
+                            Stroke="{StaticResource Blue200}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 10"
+                            Padding="10"
+                            BackgroundColor="{StaticResource Blue50}">
+                            <Grid
+                                ColumnDefinitions="auto, *">
+                                <Image 
+                                    Source="location"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"/>
+                                <controls:BorderlessEntry
+                                    Grid.Column="1"
+                                    Text="{Binding Destination}"
+                                    FontFamily="PoppinsRegular"
+                                    Placeholder="Where do you wish to go?"
+                                    Margin="10, 0, 0, 0"/>
+                            </Grid>
+                        </Border>
+                        
+                        <Border
+                            Stroke="{StaticResource Blue200}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 10"
+                            Padding="10"
+                            BackgroundColor="{StaticResource Blue50}">
+                            <Grid
+                                ColumnDefinitions="auto, *">
+                                <Image 
+                                    Source="calendar"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"/>
+                                <HorizontalStackLayout
+                                    Grid.Column="1"
+                                    Margin="10, 0, 0, 0"
+                                    Spacing="5">
+                                    <controls:BorderlessDatePicker
+                                        Date="{Binding StartDate}"
+                                        Format="dd.MM.yyyy"
+                                        FontFamily="PoppinsRegular"/>
+                                    <Label 
+                                        Text=" - "
+                                        VerticalTextAlignment="End"
+                                        TextColor="{StaticResource Gray500}"
+                                        FontFamily="PoppinsRegular"/>
+                                    <controls:BorderlessDatePicker
+                                        Date="{Binding EndDate}"
+                                        Format="dd.MM.yyyy"
+                                        FontFamily="PoppinsRegular"/>
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Border>
+                        
+                        <Border
+                            Stroke="{StaticResource Blue200}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 10"
+                            Padding="10"
+                            BackgroundColor="{StaticResource Blue50}">
+                            <VerticalStackLayout Spacing="10">
+                                <Grid
+                                    ColumnDefinitions="auto, *"
+                                    Margin="0,10">
+                                    <Image 
+                                        Source="activity"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"/>
+                                    <Label
+                                        Grid.Column="1"
+                                        Text="Preferred activities"
+                                        TextColor="{StaticResource Gray500}"
+                                        FontFamily="PoppinsRegular"
+                                        Margin="10, 0, 0, 0"/>
+                                </Grid>
+                                
+                                <CollectionView
+                                    ItemsSource="{Binding Activities}"
+                                    SelectedItems="{Binding SelectedActivities, Mode=TwoWay}"
+                                    SelectionMode="Multiple">
+                                    <CollectionView.ItemsLayout>
+                                        <GridItemsLayout 
+                                            Span="2"
+                                            Orientation="Vertical"
+                                            VerticalItemSpacing="10"
+                                            HorizontalItemSpacing="10"/>
+                                    </CollectionView.ItemsLayout>
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate x:DataType="models:Activity">
+                                            <Border>
+                                                <Label
+                                                    Text="{Binding .}"
+                                                    FontFamily="PoppinsRegular"
+                                                    HorizontalOptions="Center"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </Border>
+                        
+                        <Border
+                            Stroke="{StaticResource Blue200}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 10"
+                            Padding="10"
+                            BackgroundColor="{StaticResource Blue50}">
+                            <Grid
+                                ColumnDefinitions="auto, *">
+                                <Image 
+                                    Source="budget"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"/>
+                                <controls:BorderlessPicker 
+                                    Grid.Column="1"
+                                    Title="Budget range"
+                                    FontFamily="PoppinsRegular"
+                                    ItemsSource="{Binding BudgetRange}"
+                                    SelectedItem="{Binding SelectedBudget}"
+                                    Margin="10, 0, 0, 0"/>
+                            </Grid>
+                        </Border>
+                        
+                        <Border
+                            Stroke="{StaticResource Blue200}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 10"
+                            Padding="10"
+                            BackgroundColor="{StaticResource Blue50}">
+                            <Grid
+                                ColumnDefinitions="auto, *">
+                                <Image 
+                                    Source="companions"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"/>
+                                <controls:BorderlessPicker 
+                                    Grid.Column="1"
+                                    Title="Preferred number of companions"
+                                    FontFamily="PoppinsRegular"
+                                    ItemsSource="{Binding NumberOfCompanions}"
+                                    SelectedItem="{Binding SelectedGroupSize}"
+                                    Margin="10, 0, 0, 0"/>
+                            </Grid>
+                        </Border>
+                        
+                        <Border
+                            Stroke="{StaticResource Blue200}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 10"
+                            Padding="10"
+                            BackgroundColor="{StaticResource Blue50}">
+                            <Grid
+                                ColumnDefinitions="auto, *">
+                                <Image 
+                                    Source="note"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"/>
+                                <controls:BorderlessEditor 
+                                    Grid.Column="1"
+                                    Placeholder="Anything else? Leave a note."
+                                    FontFamily="PoppinsRegular"
+                                    AutoSize="TextChanges"
+                                    VerticalOptions="Center"
+                                    Text="{Binding AdditionalInfo}"
+                                    Margin="10, 5, 0, 0"/>
+                            </Grid>
+                        </Border>
+                        
+                        <Button
+                            ImageSource="add"
+                            Text="Create"
+                            FontFamily="PoppinsRegular"
+                            FontAttributes="Bold"
+                            Command="{Binding CreateNewTripCommand}"/>
+                    </VerticalStackLayout>
+                </Border>
+            </ScrollView>
+            
+            <!-- Top fade -->
+            <BoxView 
+                VerticalOptions="Start"
+                HeightRequest="20"
+                InputTransparent="True">
+                <BoxView.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#80FFFFFF" Offset="0.0" />
+                        <GradientStop Color="Transparent" Offset="1.0" />
+                    </LinearGradientBrush>
+                </BoxView.Background>
+            </BoxView>
+
+            <!-- Bottom fade -->
+            <BoxView 
+                VerticalOptions="End"
+                HeightRequest="20"
+                InputTransparent="True">
+                <BoxView.Background>
+                    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                        <GradientStop Color="#80FFFFFF" Offset="0.0" />
+                        <GradientStop Color="Transparent" Offset="1.0" />
+                    </LinearGradientBrush>
+                </BoxView.Background>
+            </BoxView>
+        </Grid>
+    </Border>
+</ContentPage>

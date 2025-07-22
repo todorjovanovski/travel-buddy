@@ -46,6 +46,7 @@ public static class MauiProgram
         builder.Services.AddTransientWithShellRoute<LoginPage, LoginViewModel>(nameof(LoginPage));
         builder.Services.AddTransientWithShellRoute<RegisterPage, RegisterViewModel>(nameof(RegisterPage));
         builder.Services.AddTransientWithShellRoute<CompleteProfilePage, CompleteProfileViewModel>(nameof(CompleteProfilePage));
+        builder.Services.AddTransientWithShellRoute<CreateTripPage, CreateTripViewModel>(nameof(CreateTripPage));
 
         return builder;
     }
@@ -70,5 +71,6 @@ public static class MauiProgram
         handlersCollection.AddHandler<BorderlessEntry, CustomEntryHandler>();
         handlersCollection.AddHandler<BorderlessDatePicker, CustomDatePickerHandler>();
         handlersCollection.AddHandler<BorderlessEditor, CustomEditorHandler>();
+        handlersCollection.AddHandler<BorderlessPicker, CustomPickerHandler>();
     }
 }

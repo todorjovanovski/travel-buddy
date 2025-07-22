@@ -6,6 +6,7 @@ using Firebase.Database.Query;
 using Firebase.Database.Streaming;
 using Firebase.Storage;
 using TravelBuddy.Constants;
+using TravelBuddy.Models;
 using TravelBuddy.Services.Interfaces;
 using TravelBuddy.Utils;
 using User = TravelBuddy.Models.User;
@@ -38,11 +39,11 @@ public class FirebaseDbService : IFirebaseDbService
             Id = _firebaseAuthClient.User.Uid,
             Name = fullName
         };
-        var serializedUser = JsonSerializer.Serialize(user);
+        
         await FirebaseDatabase
             .Child(FirebaseConstants.Users)
             .Child(_firebaseAuthClient.User.Uid)
-            .PatchAsync(serializedUser);
+            .PatchAsync( JsonSerializer.Serialize(user));
     }
 
     public async Task<string> UploadUserPhoto(string fileName, Stream fileStream)
@@ -70,7 +71,8 @@ public class FirebaseDbService : IFirebaseDbService
         {
             var userJson = await FirebaseDatabase
                 .Child(FirebaseConstants.Users)
-                .Child(_firebaseAuthClient.User.Uid).OnceAsJsonAsync();
+                .Child(_firebaseAuthClient.User.Uid)
+                .OnceAsJsonAsync();
             return JsonSerializer.Deserialize<User>(userJson);
         }
         catch (Exception e)
@@ -94,5 +96,22 @@ public class FirebaseDbService : IFirebaseDbService
         return FirebaseDatabase
             .Child(FirebaseConstants.Users)
             .AsObservable<User>();
+    }
+
+    public async Task CreateTrip(Trip trip)
+    {
+        await FirebaseDatabase
+            .Child(FirebaseConstants.Trips)
+            .Child(trip.Id.ToString)
+            .PutAsync(JsonSerializer.Serialize(trip));
+    }
+
+    public async Task<Trip> FetchTrip(Guid tripId)
+    {
+        var trip = await FirebaseDatabase
+            .Child(FirebaseConstants.Trips)
+            .Child(tripId.ToString)
+            .OnceAsJsonAsync();
+        return JsonSerializer.Deserialize<Trip>(trip)!;
     }
 }

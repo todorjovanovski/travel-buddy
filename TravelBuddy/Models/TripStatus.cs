@@ -2,7 +2,7 @@ namespace TravelBuddy.Models;
 
 public enum TripStatus
 {
-    Created,
+    Active,
     Completed,
     Canceled
 }

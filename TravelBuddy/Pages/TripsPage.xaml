@@ -4,9 +4,147 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:TravelBuddy.ViewModels"
              xmlns:base="clr-namespace:TravelBuddy.Pages.Base"
+             xmlns:models="clr-namespace:TravelBuddy.Models"
+             xmlns:views="clr-namespace:TravelBuddy.Views"
+             xmlns:converters="clr-namespace:TravelBuddy.Converters"
              x:Class="TravelBuddy.Pages.TripsPage"
-             x:DataType="viewModels:TripsViewModel">
+             x:DataType="viewModels:TripsViewModel"
+             x:Name="Trips">
     
-    <Label Text="Trips Page"/>
+    <ContentPage.Resources>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    </ContentPage.Resources>
+    
+    <Grid
+        Padding="10"
+        Background="{StaticResource Secondary}">
+        <Border
+            StrokeThickness="0"
+            StrokeShape="RoundRectangle 10"
+            BackgroundColor="White"
+            Padding="10"
+            IsVisible="{Binding HasAnyTrips, Converter={StaticResource InverseBooleanConverter}}">
+            <Grid
+                RowDefinitions="1*, 1*, 1*">
+                <Label
+                    Text="You have no active trips at the moment..."
+                    TextColor="{StaticResource Gray300}"
+                    FontSize="24"
+                    FontFamily="PoppinsRegular"
+                    Padding="10"    
+                    FontAttributes="Bold"
+                    VerticalOptions="Start"
+                    HorizontalTextAlignment="Center"/>
+                
+                <Image 
+                    Grid.Row="1"
+                    Opacity="0.6"
+                    Source="no_trips"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"/>
+                
+                <VerticalStackLayout
+                    Grid.Row="2"
+                    VerticalOptions="End">
+                    <Button 
+                        Text="Create a new trip"
+                        FontFamily="PoppinsRegular"
+                        FontAttributes="Bold"
+                        ImageSource="create_trip"
+                        Command="{Binding CreateTripCommand}"/>
+                    
+                    <Grid>
+                        <Border 
+                            Stroke="LightGray"
+                            StrokeThickness="1"
+                            HeightRequest="1"
+                            Margin="5"/>
+                        <Label 
+                            Text="OR"
+                            Padding="10"
+                            HorizontalOptions="Center"
+                            FontFamily="PoppinsRegular"
+                            BackgroundColor="White"/>
+                    </Grid>
+                
+                    <Button 
+                        Text="Join a fellow traveler"
+                        FontFamily="PoppinsRegular"
+                        FontAttributes="Bold"
+                        ImageSource="join_trip"
+                        Command="{Binding GoToHomePageCommand}"/>
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+        <Border
+            StrokeShape="RoundRectangle 10"
+            StrokeThickness="0"
+            BackgroundColor="White"
+            IsVisible="{Binding HasAnyTrips}">
+            <CarouselView
+                x:Name="CarouselView"
+                Loop="False"
+                ItemsSource="{Binding ActiveTrips}"
+                CurrentItem="{Binding CurrentTrip, Mode=TwoWay}"
+                HorizontalScrollBarVisibility="Never"
+                Margin="7.5, 15">
+                <CarouselView.ItemsLayout>
+                    <LinearItemsLayout 
+                        ItemSpacing="15" 
+                        Orientation="Horizontal" 
+                        SnapPointsType="MandatorySingle"
+                        SnapPointsAlignment="Center"/>
+                </CarouselView.ItemsLayout>
+                <CarouselView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Trip">
+                        <Grid>
+                            <Border 
+                                StrokeShape="RoundRectangle 10"
+                                StrokeThickness="0">
+                                <views:TripView/>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CarouselView.ItemTemplate>
+            </CarouselView>
+        </Border>
+        <Border
+            StrokeShape="RoundRectangle 10"
+            StrokeThickness="0"
+            BackgroundColor="White"
+            IsVisible="{Binding IsUserAnonymous}">
+            <Grid>
+                <Label 
+                    Text="Sign in to view your active trips..."
+                    FontSize="24"
+                    Padding="10"
+                    TextColor="{StaticResource Gray200}"
+                    FontFamily="PoppinsRegular"
+                    FontAttributes="Bold"
+                    HorizontalTextAlignment="Center"
+                    VerticalTextAlignment="Center">
+                </Label>
+                <Button
+                    Text="Sign in"
+                    Margin="10"
+                    FontFamily="PoppinsRegular"
+                    FontAttributes="Bold"
+                    VerticalOptions="End"
+                    BackgroundColor="{StaticResource Primary}"
+                    Command="{Binding GoToLoginCommand}"/>
+            </Grid>
+        </Border>
+        
+        <Border
+            StrokeShape="RoundRectangle 10"
+            StrokeThickness="0"
+            BackgroundColor="White"
+            IsVisible="{Binding IsLoading}">
+            <ActivityIndicator 
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                IsRunning="{Binding IsLoading}"/>
+        </Border>
+    </Grid>
     
 </base:ContentPageBase>

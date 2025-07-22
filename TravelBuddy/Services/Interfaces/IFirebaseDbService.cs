@@ -12,4 +12,6 @@ public interface IFirebaseDbService
     public Task<User?> FetchLoggedInUser();
     public Task UpdateUserData(User user);
     public IObservable<FirebaseEvent<User>> ObserveUserChanges();
+    public Task CreateTrip(Trip trip);
+    public Task<Trip> FetchTrip(Guid tripId);
 }

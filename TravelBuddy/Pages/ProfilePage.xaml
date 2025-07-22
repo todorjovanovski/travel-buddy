@@ -35,7 +35,7 @@
                                 Padding="3"
                                 Margin="10"
                                 BackgroundColor="#64000000"
-                                VerticalOptions="End"
+                                VerticalOptions="Start"
                                 HorizontalOptions="Fill"
                                 ZIndex="2">
                                 <IndicatorView
@@ -191,8 +191,8 @@
             <Border
                 StrokeShape="RoundRectangle 10"
                 StrokeThickness=" 0"
-                IsVisible="{Binding IsLoading}"
-                BackgroundColor="White">
+                BackgroundColor="White"
+                IsVisible="{Binding IsLoading}">
                 <ActivityIndicator 
                     HorizontalOptions="Center"
                     VerticalOptions="Center"
