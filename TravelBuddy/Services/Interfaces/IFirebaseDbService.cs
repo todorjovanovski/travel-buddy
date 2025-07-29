@@ -9,7 +9,8 @@ public interface IFirebaseDbService
     public Task CreateUser(string fullName);
     public Task<string> UploadUserPhoto(string fileName, Stream fileStream);
     public Task<string> GetPhotoUrl(string fileName);
-    public Task<User?> FetchLoggedInUser();
+    public Task<User> FetchLoggedInUser();
+    public Task<User> FetchUser(string userId);
     public Task UpdateUserData(User user);
     public IObservable<FirebaseEvent<User>> ObserveUserChanges();
     public Task CreateTrip(Trip trip);

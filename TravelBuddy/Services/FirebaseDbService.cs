@@ -1,4 +1,3 @@
-using System.Reactive.Linq;
 using System.Text.Json;
 using Firebase.Auth;
 using Firebase.Database;
@@ -8,7 +7,6 @@ using Firebase.Storage;
 using TravelBuddy.Constants;
 using TravelBuddy.Models;
 using TravelBuddy.Services.Interfaces;
-using TravelBuddy.Utils;
 using User = TravelBuddy.Models.User;
 
 namespace TravelBuddy.Services;
@@ -80,6 +78,15 @@ public class FirebaseDbService : IFirebaseDbService
             Console.WriteLine(e);
             return null;
         }
+    }
+
+    public async Task<User> FetchUser(string userId)
+    {
+        var userJson = await FirebaseDatabase
+            .Child(FirebaseConstants.Users)
+            .Child(userId)
+            .OnceAsJsonAsync();
+        return JsonSerializer.Deserialize<User>(userJson)!;
     }
 
     public async Task UpdateUserData(User user)

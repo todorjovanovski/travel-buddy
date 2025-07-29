@@ -81,32 +81,36 @@
             StrokeThickness="0"
             BackgroundColor="White"
             IsVisible="{Binding HasAnyTrips}">
-            <CarouselView
-                x:Name="CarouselView"
-                Loop="False"
-                ItemsSource="{Binding ActiveTrips}"
-                CurrentItem="{Binding CurrentTrip, Mode=TwoWay}"
-                HorizontalScrollBarVisibility="Never"
-                Margin="7.5, 15">
-                <CarouselView.ItemsLayout>
-                    <LinearItemsLayout 
-                        ItemSpacing="15" 
-                        Orientation="Horizontal" 
-                        SnapPointsType="MandatorySingle"
-                        SnapPointsAlignment="Center"/>
-                </CarouselView.ItemsLayout>
-                <CarouselView.ItemTemplate>
-                    <DataTemplate x:DataType="models:Trip">
-                        <Grid>
-                            <Border 
-                                StrokeShape="RoundRectangle 10"
-                                StrokeThickness="0">
-                                <views:TripView/>
-                            </Border>
-                        </Grid>
-                    </DataTemplate>
-                </CarouselView.ItemTemplate>
-            </CarouselView>
+            <Grid
+                RowDefinitions="9*, 1*">
+                <CarouselView
+                    x:Name="CarouselView"
+                    Loop="False"
+                    ItemsSource="{Binding ActiveTrips}"
+                    CurrentItem="{Binding CurrentTrip, Mode=TwoWay}"
+                    HorizontalScrollBarVisibility="Never"
+                    Margin="20">
+                    <CarouselView.ItemsLayout>
+                        <LinearItemsLayout 
+                            Orientation="Horizontal" 
+                            SnapPointsType="MandatorySingle"
+                            SnapPointsAlignment="Center"/>
+                    </CarouselView.ItemsLayout>
+                    <CarouselView.ItemTemplate>
+                        <DataTemplate x:DataType="models:TripCard">
+                            <views:TripView Trip="{Binding .}"/>
+                        </DataTemplate>
+                    </CarouselView.ItemTemplate>
+                </CarouselView>
+                <Button 
+                    Grid.Row="1"
+                    Text="Create a new trip"
+                    FontFamily="PoppinsRegular"
+                    FontAttributes="Bold"
+                    ImageSource="create_trip"
+                    Margin="20, 0, 20, 20"
+                    Command="{Binding CreateTripCommand}"/>
+            </Grid>
         </Border>
         <Border
             StrokeShape="RoundRectangle 10"

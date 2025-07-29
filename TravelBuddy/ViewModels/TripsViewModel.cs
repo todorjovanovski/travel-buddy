@@ -1,10 +1,11 @@
 using System.Collections.ObjectModel;
-using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TravelBuddy.Models;
 using TravelBuddy.Pages;
+using TravelBuddy.Services;
 using TravelBuddy.Services.Interfaces;
+using TravelBuddy.Utils;
 using TravelBuddy.ViewModels.Base;
 
 namespace TravelBuddy.ViewModels;
@@ -19,7 +20,8 @@ public partial class TripsViewModel : ViewModelBase
     private User? _loggedInUser;
 
     [ObservableProperty] 
-    private ObservableCollection<Trip> _activeTrips = [];
+    [NotifyPropertyChangedFor(nameof(HasAnyTrips))]
+    private ObservableCollection<TripCard> _activeTrips = [];
 
     [ObservableProperty] 
     private Trip _currentTrip = null!;
@@ -63,6 +65,38 @@ public partial class TripsViewModel : ViewModelBase
             trips.Add(await _firebaseDbService.FetchTrip(tripId));
         }
 
-        ActiveTrips = trips.Where(t => t.Status == TripStatus.Active).ToObservableCollection();
+        var unsplashService = new UnsplashService(new HttpClient());
+
+        var activeTrips = new ObservableCollection<TripCard>();
+        foreach (var trip in trips)
+        {
+            if (trip.Status is not TripStatus.Active) continue;
+            var participants = new ObservableCollection<Participant>();
+            
+            foreach (var participantId in trip.ParticipantIds)
+            {
+                var participant = await _firebaseDbService.FetchUser(participantId);
+                participants.Add(new Participant
+                {
+                    Name = participant.Name,
+                    ProfileImageSource = participant.ProfilePhotos.FirstOrDefault()?.Url
+                });
+            }
+
+            //var photoUrl = await unsplashService.GetRandomPhotoUrlAsync(trip.Destination.ToString());
+
+            var activeTrip = new TripCard
+            {
+                TripImageSource = "",
+                Title = trip.Title,
+                Destination = trip.Destination.ToString(),
+                Date = $"{trip.StartDate:dd.MM.yyyy} -  {trip.EndDate:dd.MM.yyyy}",
+                Budget = trip.Budget.GetDescription(),
+                AdditionalInfo = trip.AdditionalInfo,
+                Participants = participants
+            };
+            activeTrips.Add(activeTrip);
+        }
+        ActiveTrips = activeTrips;
     }
 }
