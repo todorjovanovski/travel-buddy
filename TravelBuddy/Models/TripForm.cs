@@ -3,29 +3,27 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TravelBuddy.Models;
 
-public partial class TripCard : ObservableObject
+public partial class TripForm : ObservableObject
 {
-    [ObservableProperty]
-    private ImageSource _tripImageSource = null!;
-    
-    [ObservableProperty]
-    private User _tripOwner = null!;
-    
     [ObservableProperty]
     private string _title = string.Empty;
     
     [ObservableProperty]
     private string _destination = string.Empty;
+
+    [ObservableProperty]
+    private DateTime _startDate = DateTime.Today.AddDays(1);
     
     [ObservableProperty]
-    private string _date = string.Empty;
-    
-    [ObservableProperty]
+    private DateTime _endDate = DateTime.Today.AddDays(7);
+
+    [ObservableProperty] 
     private string _budget = string.Empty;
     
-    [ObservableProperty]
-    private string _additionalInfo = string.Empty;
+    [ObservableProperty] 
+    private string _groupSize = string.Empty;
     
     [ObservableProperty]
-    private ObservableCollection<Participant> _participants = [];
+    private ObservableCollection<object> _selectedActivities = [];
+
 }

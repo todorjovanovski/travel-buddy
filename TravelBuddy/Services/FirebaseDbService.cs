@@ -7,6 +7,7 @@ using Firebase.Storage;
 using TravelBuddy.Constants;
 using TravelBuddy.Models;
 using TravelBuddy.Services.Interfaces;
+using TravelBuddy.Utils;
 using User = TravelBuddy.Models.User;
 
 namespace TravelBuddy.Services;
@@ -17,12 +18,16 @@ public class FirebaseDbService : IFirebaseDbService
     private FirebaseClient FirebaseDatabase => new(FirebaseConstants.DbClient, 
         new FirebaseOptions
         {
-            AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()
+            AuthTokenAsyncFactory = () => _firebaseAuthClient.User == null
+                ? Task.FromResult(FirebaseConstants.AnonymousUser)
+                : _firebaseAuthClient.User.GetIdTokenAsync()
         });
     private FirebaseStorage FirebaseStorage => new(FirebaseConstants.StorageClient,
         new FirebaseStorageOptions
         {
-            AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()
+            AuthTokenAsyncFactory = () => _firebaseAuthClient.User == null
+                ? Task.FromResult(FirebaseConstants.AnonymousUser)
+                : _firebaseAuthClient.User.GetIdTokenAsync()
         });
 
     public FirebaseDbService(IFirebaseAuthClient firebaseAuthClient)
@@ -120,5 +125,22 @@ public class FirebaseDbService : IFirebaseDbService
             .Child(tripId.ToString)
             .OnceAsJsonAsync();
         return JsonSerializer.Deserialize<Trip>(trip)!;
+    }
+
+    public async Task<IEnumerable<Trip>> FetchTrips(TripForm? tripForm)
+    {
+        try
+        {
+            var tripsJson = await FirebaseDatabase
+                .Child(FirebaseConstants.Trips)
+                .OnceAsJsonAsync();
+            var trips = JsonSerializer.Deserialize<Dictionary<string, Trip>>(tripsJson)!.Values;
+            return tripForm == null ? trips : trips.Where(t => t.MatchesValuesOf(tripForm));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

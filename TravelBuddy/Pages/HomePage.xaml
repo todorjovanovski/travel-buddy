@@ -4,9 +4,111 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:TravelBuddy.ViewModels"
              xmlns:base="clr-namespace:TravelBuddy.Pages.Base"
+             xmlns:views="clr-namespace:TravelBuddy.Views"
+             xmlns:models="clr-namespace:TravelBuddy.Models"    
              x:Class="TravelBuddy.Pages.HomePage"
-             x:DataType="viewModels:HomeViewModel">
+             x:DataType="viewModels:HomeViewModel"
+             Background="{StaticResource Secondary}"
+             Padding="20">
     
-    <Label Text="Home Page"/>
+    <Grid
+        RowDefinitions="Auto, *">
+        <VerticalStackLayout
+            ZIndex="1"
+            Margin="0, 0, 0, 20">
+            <Border
+                Stroke="{StaticResource Gray200}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 30"
+                BackgroundColor="White"
+                Padding="5">
+                <Grid
+                    ColumnDefinitions="Auto, 6*, 1*">
+                    <Image 
+                        Source="filter"
+                        Margin="10, 0, 0, 0"/>
+                    <Label
+                        Grid.Column="1"
+                        Text="Filter your trips."
+                        FontSize="16"
+                        FontFamily="PoppinsRegular"
+                        VerticalTextAlignment="Center"
+                        TextColor="{StaticResource Gray500}"
+                        Margin="10, 4, 0, 0"/>
+                    <Button
+                        Grid.Column="2"
+                        FontFamily="PoppinsRegular"
+                        FontAttributes="Bold"
+                        ImageSource="reset"
+                        CornerRadius="50"
+                        Command="{Binding ResetTripFiltersCommand}"/>
+                </Grid>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleFilterOptionsCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
+            <views:TripFormView 
+                TripForm="{Binding TripForm}"
+                SearchTripsCommand="{Binding SearchTripsCommand}"
+                IsVisible="{Binding AreFilterOptionsVisible}"/>
+        </VerticalStackLayout>
+        <CollectionView 
+            Grid.Row="1"
+            ItemsSource="{Binding Trips}"
+            VerticalScrollBarVisibility="Never"
+            HorizontalScrollBarVisibility="Never">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout
+                    Orientation="Vertical"
+                    ItemSpacing="30"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:TripCard">
+                    <VerticalStackLayout Spacing="10">
+                        <Grid
+                            ColumnDefinitions="Auto, *">
+                            <Border
+                                Stroke="White"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 50"
+                                WidthRequest="50"
+                                HeightRequest="50">
+                                <Image 
+                                    Source="{Binding TripOwner.ProfilePhotos[0].Url}"
+                                    Aspect="AspectFill"/>
+                            </Border>
+                            <Grid
+                                Grid.Column="1"
+                                RowDefinitions="*, *"
+                                VerticalOptions="Center">
+                                <Label
+                                    Text="{Binding TripOwner.Name}"
+                                    TextColor="White"
+                                    FontFamily="PoppinsRegular"
+                                    FontAttributes="Bold"
+                                    FontSize="16"
+                                    Margin="10, 0, 0, 0"/>
+                                <Label
+                                    Grid.Row="1"
+                                    Text="{Binding TripOwner.Location}"
+                                    TextColor="White"
+                                    FontFamily="PoppinsRegular"
+                                    FontSize="12"
+                                    Margin="10, 0, 0, 0"/>
+                            </Grid>
+                         
+                        </Grid>
+                        <Border
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 5">
+                            <views:TripView 
+                                Trip="{Binding .}"
+                                FillColor="White"/>
+                        </Border>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
     
 </base:ContentPageBase>

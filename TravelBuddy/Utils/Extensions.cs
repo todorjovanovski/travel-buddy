@@ -1,7 +1,9 @@
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using TravelBuddy.Models;
+using TravelBuddy.Services.Interfaces;
 
 namespace TravelBuddy.Utils;
 
@@ -84,5 +86,78 @@ public static class Extensions
 
         var attr = field?.GetCustomAttribute<DescriptionAttribute>();
         return attr?.Description ?? value.ToString();
+    }
+
+    /// <summary>
+    /// Converts the trips to trip cards
+    /// </summary>
+    /// <param name="trips">Fetched trips</param>
+    /// <param name="firebaseDbService">DBService instance to be used</param>
+    /// <returns>TripCard objects from the given trips</returns>
+    public static async Task<ObservableCollection<TripCard>> ToTripCards(this IEnumerable<Trip> trips, IFirebaseDbService firebaseDbService)
+    {
+        var tripCards = new ObservableCollection<TripCard>();
+        
+        foreach (var trip in trips)
+        {
+            if (trip.Status is not TripStatus.Active) continue;
+            var participants = new ObservableCollection<Participant>();
+            
+            foreach (var participantId in trip.ParticipantIds)
+            {
+                var participant = await firebaseDbService.FetchUser(participantId);
+                participants.Add(new Participant
+                {
+                    Name = participant.Name,
+                    ProfileImageSource = participant.ProfilePhotos.FirstOrDefault()?.Url
+                });
+            }
+            
+            var tripOwner = await firebaseDbService.FetchUser(trip.OwnerId);
+
+            //var photoUrl = await unsplashService.GetRandomPhotoUrlAsync(trip.Destination.ToString());
+
+            var activeTrip = new TripCard
+            {
+                TripImageSource = "",
+                TripOwner = tripOwner,
+                Title = trip.Title,
+                Destination = trip.Destination.ToString(),
+                Date = $"{trip.StartDate:dd.MM.yyyy} -  {trip.EndDate:dd.MM.yyyy}",
+                Budget = trip.Budget.GetDescription(),
+                AdditionalInfo = trip.AdditionalInfo,
+                Participants = participants
+            };
+            tripCards.Add(activeTrip);
+        }
+
+        return tripCards;
+    }
+    
+    /// <summary>
+    /// Checks is the trip matches any of the non-empty values of the trip form.
+    /// </summary>
+    /// <param name="trip">Trip to be compared</param>
+    /// <param name="tripForm">TripForm used for the filter</param>
+    /// <returns>Boolean indicating whether the filter will match the given trip.</returns>
+    public static bool MatchesValuesOf(this Trip trip, TripForm tripForm)
+    {
+        if (!string.IsNullOrWhiteSpace(tripForm.Title) && tripForm.Title != trip.Title)
+            return false;
+        if (!string.IsNullOrWhiteSpace(tripForm.Destination) && tripForm.Destination != trip.Destination.ToString())
+            return false;
+        if (tripForm.StartDate != trip.StartDate)
+            return false;
+        if (tripForm.EndDate != trip.EndDate)
+            return false;
+        if (!string.IsNullOrWhiteSpace(tripForm.Budget) && tripForm.Budget != trip.Budget.GetDescription())
+            return false;
+        if (!string.IsNullOrWhiteSpace(tripForm.GroupSize) && tripForm.GroupSize != trip.GroupSize.GetDescription())
+            return false;
+        var selectedActivities =
+            tripForm.SelectedActivities.Select(obj => Enum.Parse<Activity>(obj.ToString()!)).ToList();
+        if (tripForm.SelectedActivities.Count > 0 && selectedActivities.Intersect(trip.Activities).Any())
+            return false;
+        return true;
     }
 }

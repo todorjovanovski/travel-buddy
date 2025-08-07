@@ -17,4 +17,13 @@ public partial class TripView : ContentView
         get => (TripCard)GetValue(TripProperty);
         set => SetValue(TripProperty, value);
     }
+
+    public static readonly BindableProperty FillColorProperty =
+        BindableProperty.Create(nameof(FillColor), typeof(Color), typeof(TripView));
+
+    public Color FillColor
+    {
+        get => (Color)GetValue(FillColorProperty);
+        set => SetValue(FillColorProperty, value);
+    }
 }

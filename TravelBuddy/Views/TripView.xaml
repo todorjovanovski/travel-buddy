@@ -9,10 +9,10 @@
     <Border
         StrokeThickness="1"
         StrokeShape="RoundRectangle 20"
-        Stroke="{StaticResource Blue200}"
-        BackgroundColor="{StaticResource Blue50}">
+        Stroke="{Binding }"
+        BindingContext="{x:Reference ThisView}"
+        BackgroundColor="{Binding FillColor}">
         <VerticalStackLayout
-            BindingContext="{x:Reference ThisView}"
             Padding="10">
             <Image Source="{Binding Trip.TripImageSource}"/>
             <Label 

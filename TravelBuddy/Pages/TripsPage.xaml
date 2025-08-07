@@ -98,7 +98,9 @@
                     </CarouselView.ItemsLayout>
                     <CarouselView.ItemTemplate>
                         <DataTemplate x:DataType="models:TripCard">
-                            <views:TripView Trip="{Binding .}"/>
+                            <views:TripView 
+                                Trip="{Binding .}"
+                                FillColor="{StaticResource Blue50}"/>
                         </DataTemplate>
                     </CarouselView.ItemTemplate>
                 </CarouselView>
