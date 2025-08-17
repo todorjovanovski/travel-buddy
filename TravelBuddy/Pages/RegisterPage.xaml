@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<base:ContentPageBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:TravelBuddy.ViewModels"
              xmlns:controls="clr-namespace:TravelBuddy.Controls"
+             xmlns:base="clr-namespace:TravelBuddy.Pages.Base"
              x:Class="TravelBuddy.Pages.RegisterPage"
              x:DataType="viewModels:RegisterViewModel"
              Shell.TabBarIsVisible="False">
@@ -145,4 +146,4 @@
         </Border>
     </Grid>
     
-</ContentPage>
+</base:ContentPageBase>

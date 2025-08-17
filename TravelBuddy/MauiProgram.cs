@@ -40,13 +40,14 @@ public static class MauiProgram
     
     public static MauiAppBuilder RegisterPagesWithViewModels(this MauiAppBuilder builder)
     {
-        builder.Services.AddTransient<HomeViewModel>();
-        builder.Services.AddTransient<ProfileViewModel>();
-        builder.Services.AddTransient<TripsViewModel>();
+        builder.Services.AddSingleton<HomeViewModel>();
+        builder.Services.AddSingleton<ProfileViewModel>();
+        builder.Services.AddSingleton<TripsViewModel>();
         builder.Services.AddTransientWithShellRoute<LoginPage, LoginViewModel>(nameof(LoginPage));
         builder.Services.AddTransientWithShellRoute<RegisterPage, RegisterViewModel>(nameof(RegisterPage));
         builder.Services.AddTransientWithShellRoute<CompleteProfilePage, CompleteProfileViewModel>(nameof(CompleteProfilePage));
         builder.Services.AddTransientWithShellRoute<CreateTripPage, CreateTripViewModel>(nameof(CreateTripPage));
+        builder.Services.AddTransientWithShellRoute<ChatPage, ChatViewModel>(nameof(ChatPage));
 
         return builder;
     }

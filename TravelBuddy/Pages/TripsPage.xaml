@@ -4,9 +4,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:TravelBuddy.ViewModels"
              xmlns:base="clr-namespace:TravelBuddy.Pages.Base"
-             xmlns:models="clr-namespace:TravelBuddy.Models"
              xmlns:views="clr-namespace:TravelBuddy.Views"
              xmlns:converters="clr-namespace:TravelBuddy.Converters"
+             xmlns:dtOs="clr-namespace:TravelBuddy.Models.DTOs"
              x:Class="TravelBuddy.Pages.TripsPage"
              x:DataType="viewModels:TripsViewModel"
              x:Name="Trips">
@@ -71,7 +71,7 @@
                         Text="Join a fellow traveler"
                         FontFamily="PoppinsRegular"
                         FontAttributes="Bold"
-                        ImageSource="join_trip"
+                        ImageSource="person"
                         Command="{Binding GoToHomePageCommand}"/>
                 </VerticalStackLayout>
             </Grid>
@@ -88,6 +88,7 @@
                     Loop="False"
                     ItemsSource="{Binding ActiveTrips}"
                     CurrentItem="{Binding CurrentTrip, Mode=TwoWay}"
+                    CurrentItemChangedCommand="{Binding CurrentTripChangedCommand}"
                     HorizontalScrollBarVisibility="Never"
                     Margin="20">
                     <CarouselView.ItemsLayout>
@@ -97,10 +98,21 @@
                             SnapPointsAlignment="Center"/>
                     </CarouselView.ItemsLayout>
                     <CarouselView.ItemTemplate>
-                        <DataTemplate x:DataType="models:TripCard">
+                        <DataTemplate x:DataType="dtOs:TripCard">
                             <views:TripView 
                                 Trip="{Binding .}"
-                                FillColor="{StaticResource Blue50}"/>
+                                FillColor="{StaticResource Blue50}"
+                                DeleteTripCommand="{Binding DeleteTripCommand, 
+                                Source={x:RelativeSource AncestorType={x:Type viewModels:TripsViewModel}}}"
+                                ToggleRequestsCommand="{Binding ToggleRequestsCommand, 
+                                Source={x:RelativeSource AncestorType={x:Type viewModels:TripsViewModel}}}">
+                                <views:TripView.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                        Command="{Binding OpenTripChatCommand, 
+                                        Source={x:RelativeSource AncestorType={x:Type viewModels:TripsViewModel}}}"
+                                        CommandParameter="{Binding ChatId}"/>
+                                </views:TripView.GestureRecognizers>
+                            </views:TripView>
                         </DataTemplate>
                     </CarouselView.ItemTemplate>
                 </CarouselView>

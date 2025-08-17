@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<base:ContentPageBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:TravelBuddy.Models"
              xmlns:viewModels="clr-namespace:TravelBuddy.ViewModels"
              xmlns:controls="clr-namespace:TravelBuddy.Controls"
+             xmlns:base="clr-namespace:TravelBuddy.Pages.Base"
+             xmlns:enums="clr-namespace:TravelBuddy.Models.Enums"
              x:Class="TravelBuddy.Pages.CompleteProfilePage"
              x:DataType="viewModels:CompleteProfileViewModel"
              Shell.TabBarIsVisible="False">
     
-    <ContentPage.Resources>
+    <base:ContentPageBase.Resources>
         <Style TargetType="Border">
             <Setter Property="VisualStateManager.VisualStateGroups">
                 <VisualStateGroupList>
@@ -42,7 +44,7 @@
                 </VisualStateGroupList>
             </Setter>
         </Style>
-    </ContentPage.Resources>
+    </base:ContentPageBase.Resources>
     
     <Grid
         RowDefinitions="1*, 5*"
@@ -145,7 +147,7 @@
                                         HorizontalItemSpacing="10"/>
                                 </CollectionView.ItemsLayout>
                                 <CollectionView.ItemTemplate>
-                                    <DataTemplate x:DataType="models:Activity">
+                                    <DataTemplate x:DataType="enums:Activity">
                                         <Border>
                                             <Label
                                                 Text="{Binding .}"
@@ -187,4 +189,4 @@
         </Border>
     </Grid>
     
-</ContentPage>
+</base:ContentPageBase>

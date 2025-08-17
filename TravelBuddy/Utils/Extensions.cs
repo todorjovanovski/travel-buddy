@@ -2,8 +2,14 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using CommunityToolkit.Maui.Core.Extensions;
 using TravelBuddy.Models;
+using TravelBuddy.Models.DTOs;
+using TravelBuddy.Models.Enums;
 using TravelBuddy.Services.Interfaces;
+using Participant = TravelBuddy.Models.DTOs.Participant;
+using TripCard = TravelBuddy.Models.DTOs.TripCard;
+using TripForm = TravelBuddy.Models.DTOs.TripForm;
 
 namespace TravelBuddy.Utils;
 
@@ -25,6 +31,21 @@ public static class Extensions
             Location = user.Location,
             FavoriteActivities = user.FavoriteActivities,
             ProfilePhotos = user.ProfilePhotos
+        };
+    }
+    
+    /// <summary>
+    /// Makes a deep copy of the Chat
+    /// </summary>
+    /// <param name="chat">Chat object to be copied</param>
+    /// <returns>Deep copy of the chat</returns>
+    public static Chat Copy(this Chat chat)
+    {
+        return new Chat
+        {
+            TripId = chat.TripId,
+            Title = chat.Title,
+            Messages = chat.Messages
         };
     }
     
@@ -109,7 +130,7 @@ public static class Extensions
                 participants.Add(new Participant
                 {
                     Name = participant.Name,
-                    ProfileImageSource = participant.ProfilePhotos.FirstOrDefault()?.Url
+                    ProfileImageSource = participant.ProfilePhotos.FirstOrDefault()?.Url ?? ImageSource.FromFile("participant")
                 });
             }
             
@@ -119,6 +140,8 @@ public static class Extensions
 
             var activeTrip = new TripCard
             {
+                TripId = trip.Id,
+                ChatId = trip.ChatId,
                 TripImageSource = "",
                 TripOwner = tripOwner,
                 Title = trip.Title,
@@ -126,12 +149,26 @@ public static class Extensions
                 Date = $"{trip.StartDate:dd.MM.yyyy} -  {trip.EndDate:dd.MM.yyyy}",
                 Budget = trip.Budget.GetDescription(),
                 AdditionalInfo = trip.AdditionalInfo,
-                Participants = participants
+                Participants = participants,
+                IsCurrentUserTripOwner = tripOwner.Id == firebaseDbService.LoggedInUserId,
             };
             tripCards.Add(activeTrip);
         }
 
         return tripCards;
+    }
+
+    public static ObservableCollection<UserTripRequest> ToUserTripRequests(this IEnumerable<TripRequest> tripRequests)
+    {
+        return tripRequests.Select(tripRequest => new UserTripRequest
+        {
+            Id = tripRequest.Id,
+            TripId = tripRequest.TripId,
+            UserId = tripRequest.RequestingUser.Id,
+            Location = tripRequest.RequestingUser.Location.ToString(),
+            NameAndAge = $"{tripRequest.RequestingUser.Name}, {tripRequest.RequestingUser.Age}",
+            ProfileImageSource = tripRequest.RequestingUser.ProfilePhotos.FirstOrDefault()?.Url
+        }).ToObservableCollection();
     }
     
     /// <summary>

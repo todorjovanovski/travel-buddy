@@ -6,6 +6,8 @@
              xmlns:base="clr-namespace:TravelBuddy.Pages.Base"
              xmlns:models="clr-namespace:TravelBuddy.Models"
              xmlns:converters="clr-namespace:TravelBuddy.Converters"
+             xmlns:dtOs="clr-namespace:TravelBuddy.Models.DTOs"
+             xmlns:enums="clr-namespace:TravelBuddy.Models.Enums"
              x:Class="TravelBuddy.Pages.ProfilePage"
              x:DataType="viewModels:ProfileViewModel">
     
@@ -62,7 +64,7 @@
                                 IndicatorView="IndicatorView"
                                 HorizontalScrollBarVisibility="Never">
                                 <CarouselView.ItemTemplate>
-                                    <DataTemplate x:DataType="models:ProfilePhoto">
+                                    <DataTemplate x:DataType="dtOs:ProfilePhoto">
                                         <Image 
                                             Source="{Binding Url}"
                                             Aspect="AspectFill"/>
@@ -140,7 +142,7 @@
                                             HorizontalItemSpacing="10"/>
                                     </CollectionView.ItemsLayout>
                                     <CollectionView.ItemTemplate>
-                                        <DataTemplate x:DataType="models:Activity">
+                                        <DataTemplate x:DataType="enums:Activity">
                                             <Border
                                                 StrokeThickness="0"
                                                 StrokeShape="RoundRectangle 5"

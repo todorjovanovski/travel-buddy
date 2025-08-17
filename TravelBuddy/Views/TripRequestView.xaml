@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TravelBuddy.Views.TripRequestView"
+             x:Name="ThisView">
+    <Border
+        BindingContext="{x:Reference ThisView}"
+        StrokeThickness="0"
+        StrokeShape="RoundRectangle 20"
+        Padding="10">
+        <Grid 
+            ColumnDefinitions="Auto, *, Auto, Auto">
+            <Image
+                Source="{Binding UserTripRequest.ProfileImageSource}"/>
+            <VerticalStackLayout
+                Grid.Column="1">
+                <Label
+                    Text="{Binding UserTripRequest.NameAndAge}"/>
+                <Label
+                    Text="{Binding UserTripRequest.Location}"/>
+            </VerticalStackLayout>
+            <ImageButton
+                Grid.Column="2"
+                Source="accept"
+                Command="{Binding AcceptTripRequestCommand}"
+                CommandParameter="{Binding UserTripRequest}"/>
+            <ImageButton
+                Grid.Column="3"
+                Source="reject"
+                Command="{Binding RejectTripRequestCommand}"
+                CommandParameter="{Binding UserTripRequest}"/>
+        </Grid>
+    </Border>
+</ContentView>

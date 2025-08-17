@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace TravelBuddy.Models;
+namespace TravelBuddy.Models.DTOs;
 
 public partial class TripForm : ObservableObject
 {

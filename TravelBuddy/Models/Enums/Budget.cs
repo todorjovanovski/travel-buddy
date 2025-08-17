@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace TravelBuddy.Models;
+namespace TravelBuddy.Models.Enums;
 
 public enum Budget
 {

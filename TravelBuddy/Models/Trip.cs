@@ -1,8 +1,11 @@
+using TravelBuddy.Models.Enums;
+
 namespace TravelBuddy.Models;
 
 public class Trip
 {
-    public Guid Id { get; set; } = Guid.Empty;
+    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public string ChatId { get; set; } = string.Empty;
     public string OwnerId { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public Location Destination { get; set; } = new();

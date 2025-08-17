@@ -1,4 +1,4 @@
-namespace TravelBuddy.Models;
+namespace TravelBuddy.Models.DTOs;
 
 public class ProfilePhoto
 {

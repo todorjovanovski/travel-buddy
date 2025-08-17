@@ -5,6 +5,7 @@
              xmlns:controls="clr-namespace:TravelBuddy.Controls"
              xmlns:models="clr-namespace:TravelBuddy.Models"
              xmlns:constants="clr-namespace:TravelBuddy.Constants"
+             xmlns:enums="clr-namespace:TravelBuddy.Models.Enums"
              x:Class="TravelBuddy.Views.TripFormView"
              x:Name="ThisView">
     <ContentView.Resources>
@@ -148,7 +149,7 @@
                                             HorizontalItemSpacing="10"/>
                                     </CollectionView.ItemsLayout>
                                     <CollectionView.ItemTemplate>
-                                        <DataTemplate x:DataType="models:Activity">
+                                        <DataTemplate x:DataType="enums:Activity">
                                             <Border>
                                                 <Label
                                                     Text="{Binding .}"

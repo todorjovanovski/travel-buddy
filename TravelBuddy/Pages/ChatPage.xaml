@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<base:ContentPageBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:base="clr-namespace:TravelBuddy.Pages.Base"
+             xmlns:converters="clr-namespace:TravelBuddy.Converters"
+             xmlns:viewModels="clr-namespace:TravelBuddy.ViewModels"
+             xmlns:controls="clr-namespace:TravelBuddy.Controls"
+             xmlns:views="clr-namespace:TravelBuddy.Views"
+             xmlns:dtOs="clr-namespace:TravelBuddy.Models.DTOs"
+             x:Class="TravelBuddy.Pages.ChatPage"
+             Background="{StaticResource Secondary}"
+             x:DataType="viewModels:ChatViewModel">
+    
+    <base:ContentPageBase.Resources>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    </base:ContentPageBase.Resources>
+    
+   
+    <Border 
+        BackgroundColor="AliceBlue" 
+        Margin="10"
+        StrokeShape="RoundRectangle 20" 
+        Stroke="Transparent">
+        <Grid 
+            RowDefinitions="1*, 9*" 
+            Margin="10">
+            <Grid 
+                ColumnDefinitions="1*, 9*" 
+                HorizontalOptions="Fill">
+                <ImageButton
+                    Source="back" 
+                    VerticalOptions="Center" 
+                    HorizontalOptions="Center"
+                    Command="{Binding GoBackCommand}"/>
+                
+                <Label 
+                    Grid.Column="1" 
+                    HorizontalOptions="End" 
+                    VerticalTextAlignment="Center"
+                    Text="{Binding Title}" 
+                    FontSize="20"/>
+            </Grid>
+            <Grid 
+                Grid.Row="1" 
+                RowDefinitions="*, Auto">
+                <VerticalStackLayout 
+                    IsVisible="{Binding IsChatEmpty}" 
+                    VerticalOptions="Center">
+                    <Image 
+                        Source="robot_icon" 
+                        VerticalOptions="Center" 
+                        HorizontalOptions="Center"
+                        Opacity="0.7"/>
+                    <Label 
+                        Text="Empty chat..." 
+                        Margin="20, 0"
+                        FontSize="20" 
+                        VerticalTextAlignment="Center" 
+                        HorizontalTextAlignment="Center"
+                        TextColor="Black" 
+                        FontFamily="OpenSansSemibold"
+                        FontAttributes="Bold" 
+                        Opacity="0.3"/>
+                </VerticalStackLayout>
+                <CollectionView 
+                    x:Name="Messages"
+                    VerticalOptions="Fill" 
+                    ItemsUpdatingScrollMode="KeepLastItemInView"
+                    VerticalScrollBarVisibility="Never"
+                    ItemsSource="{Binding Messages}"
+                    IsVisible="{Binding IsChatEmpty, Converter={StaticResource InverseBooleanConverter}}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="dtOs:ChatMessage">
+                            <views:MessageView
+                                Message="{Binding .}" />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <Grid
+                    Grid.Row="1"
+                    ColumnDefinitions="*, Auto">
+                    <Border 
+                        Stroke="Transparent" 
+                        StrokeShape="RoundRectangle 20" 
+                        VerticalOptions="End" 
+                        BackgroundColor="White"
+                        Margin="0, 5"
+                        Padding="20, 10">
+                        <controls:BorderlessEntry 
+                            Text="{Binding Message}" 
+                            FontFamily="PoppinsRegular"
+                            BackgroundColor="White"
+                            Placeholder="Type your message..." 
+                            PlaceholderColor="{StaticResource Gray400}" 
+                            Keyboard="Chat">
+                        </controls:BorderlessEntry>
+                        <Border.Shadow>
+                            <Shadow 
+                                Brush="Black"
+                                Offset="0, 4"
+                                Radius="2"
+                                Opacity="0.3"/>
+                        </Border.Shadow>
+                    </Border>
+                    <Border 
+                        Grid.Column="1"
+                        Stroke="Transparent" 
+                        StrokeShape="RoundRectangle 20" 
+                        VerticalOptions="Center" 
+                        BackgroundColor="White"
+                        Margin="10, 5, 0, 5"
+                        Padding="10">
+                        <Image Source="send">
+                        </Image>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding EntryBoxIconTappedCommand}"/>
+                        </Border.GestureRecognizers>
+                        <Border.Shadow>
+                            <Shadow 
+                                Brush="Black"
+                                Offset="0, 4"
+                                Radius="2"
+                                Opacity="0.3"/>
+                        </Border.Shadow>
+                    </Border>
+                </Grid>
+                
+            </Grid>
+        </Grid>
+    </Border>      
+        
+</base:ContentPageBase>

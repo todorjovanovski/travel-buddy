@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Maui.Core.Extensions;
 using TravelBuddy.Models;
+using TravelBuddy.Models.Enums;
 using TravelBuddy.Utils;
 
 namespace TravelBuddy.Constants;

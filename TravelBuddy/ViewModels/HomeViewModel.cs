@@ -5,7 +5,7 @@ using TravelBuddy.Models;
 using TravelBuddy.Services.Interfaces;
 using TravelBuddy.Utils;
 using TravelBuddy.ViewModels.Base;
-
+using TravelBuddy.Models.DTOs;
 namespace TravelBuddy.ViewModels;
 
 public partial class HomeViewModel : ViewModelBase
@@ -21,6 +21,8 @@ public partial class HomeViewModel : ViewModelBase
 
     [ObservableProperty] 
     private bool _areFilterOptionsVisible;
+    
+    public User? LoggedInUser { get; set; }
 
     public HomeViewModel(INavigationService navigationService, IFirebaseDbService firebaseDbService)
     {
@@ -54,8 +56,16 @@ public partial class HomeViewModel : ViewModelBase
         IsLoading = false;
     }
 
+    [RelayCommand]
+    private async Task RequestToJoinTrip(TripCard tripCard)
+    {
+        if (LoggedInUser == null) return; //TODO: SHOW LOGIN PAGE
+        await _firebaseDbService.RequestToJoinTrip(tripCard.TripId, tripCard.TripOwner.Id, LoggedInUser);
+    }
+
     protected override async Task OnAppearingAsync()
     {
+        LoggedInUser = await _firebaseDbService.FetchLoggedInUser();
         var trips = await _firebaseDbService.FetchTrips();
         Trips = await trips.ToTripCards(_firebaseDbService);
         await base.OnAppearingAsync();

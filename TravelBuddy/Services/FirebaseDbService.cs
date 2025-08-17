@@ -8,6 +8,7 @@ using TravelBuddy.Constants;
 using TravelBuddy.Models;
 using TravelBuddy.Services.Interfaces;
 using TravelBuddy.Utils;
+using TripForm = TravelBuddy.Models.DTOs.TripForm;
 using User = TravelBuddy.Models.User;
 
 namespace TravelBuddy.Services;
@@ -30,6 +31,8 @@ public class FirebaseDbService : IFirebaseDbService
                 : _firebaseAuthClient.User.GetIdTokenAsync()
         });
 
+    public string LoggedInUserId => _firebaseAuthClient.User?.Uid ?? string.Empty;
+
     public FirebaseDbService(IFirebaseAuthClient firebaseAuthClient)
     {
         _firebaseAuthClient = firebaseAuthClient;
@@ -46,7 +49,7 @@ public class FirebaseDbService : IFirebaseDbService
         await FirebaseDatabase
             .Child(FirebaseConstants.Users)
             .Child(_firebaseAuthClient.User.Uid)
-            .PatchAsync( JsonSerializer.Serialize(user));
+            .PutAsync( JsonSerializer.Serialize(user));
     }
 
     public async Task<string> UploadUserPhoto(string fileName, Stream fileStream)
@@ -99,7 +102,7 @@ public class FirebaseDbService : IFirebaseDbService
         var serializedUser = JsonSerializer.Serialize(user);
         await FirebaseDatabase
             .Child(FirebaseConstants.Users)
-            .Child(_firebaseAuthClient.User.Uid)
+            .Child(user.Id)
             .PutAsync(serializedUser);
     }
 
@@ -118,11 +121,19 @@ public class FirebaseDbService : IFirebaseDbService
             .PutAsync(JsonSerializer.Serialize(trip));
     }
 
-    public async Task<Trip> FetchTrip(Guid tripId)
+    public async Task UpdateTripData(Trip trip)
+    {
+        await FirebaseDatabase
+            .Child(FirebaseConstants.Trips)
+            .Child(trip.Id)
+            .PutAsync(JsonSerializer.Serialize(trip));
+    }
+
+    public async Task<Trip> FetchTrip(string tripId)
     {
         var trip = await FirebaseDatabase
             .Child(FirebaseConstants.Trips)
-            .Child(tripId.ToString)
+            .Child(tripId)
             .OnceAsJsonAsync();
         return JsonSerializer.Deserialize<Trip>(trip)!;
     }
@@ -134,13 +145,113 @@ public class FirebaseDbService : IFirebaseDbService
             var tripsJson = await FirebaseDatabase
                 .Child(FirebaseConstants.Trips)
                 .OnceAsJsonAsync();
-            var trips = JsonSerializer.Deserialize<Dictionary<string, Trip>>(tripsJson)!.Values;
-            return tripForm == null ? trips : trips.Where(t => t.MatchesValuesOf(tripForm));
+            var trips = JsonSerializer.Deserialize<Dictionary<string, Trip>>(tripsJson)?.Values;
+            return (tripForm == null ? trips : trips?.Where(t => t.MatchesValuesOf(tripForm)))?
+                .Where(t => t.OwnerId != _firebaseAuthClient.User?.Uid) ?? [];
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             throw;
         }
+    }
+
+    public async Task CreateChat(Chat chat)
+    {
+        await FirebaseDatabase
+            .Child(FirebaseConstants.Chats)
+            .Child(chat.Id)
+            .Child(FirebaseConstants.Chat)
+            .PutAsync(JsonSerializer.Serialize(chat));
+    }
+
+    public async Task<Chat> FetchCurrentChat(string chatId)
+    {
+        var chatJson = await FirebaseDatabase
+            .Child(FirebaseConstants.Chats)
+            .Child(chatId)
+            .Child(FirebaseConstants.Chat)
+            .OnceAsJsonAsync();
+        return JsonSerializer.Deserialize<Chat>(chatJson)!;
+    }
+
+    public IObservable<FirebaseEvent<Chat>> ObserveChatChanges(string chatId)
+    {
+        return FirebaseDatabase
+            .Child(FirebaseConstants.Chats)
+            .Child(chatId)
+            .AsObservable<Chat>();
+    }
+
+    public async Task SendMessage(string message, Chat chat)
+    {
+        var newMessage = new Message
+        {
+            ChatId = chat.Id,
+            Content = message,
+            SenderId = _firebaseAuthClient.User.Uid,
+            Time = DateTime.UtcNow
+        };
+        chat.Messages.Add(newMessage);
+        chat.LastMessage = newMessage;
+        var serializedChat = JsonSerializer.Serialize(chat);
+        await FirebaseDatabase
+            .Child(FirebaseConstants.Chats)
+            .Child(chat.Id)
+            .Child(FirebaseConstants.Chat)
+            .PatchAsync(serializedChat);
+    }
+
+    public async Task DeleteTrip(string tripId)
+    {
+        await FirebaseDatabase
+            .Child(FirebaseConstants.Trips)
+            .Child(tripId)
+            .DeleteAsync();
+    }
+
+    public async Task RequestToJoinTrip(string tripId, string tripOwnerId, User requestingUser)
+    {
+        var tripRequest = new TripRequest
+        {
+            TripOwnerId = tripOwnerId,
+            RequestingUser = requestingUser,
+            TripId = tripId
+        };
+        await FirebaseDatabase
+            .Child(FirebaseConstants.TripRequests)
+            .Child(tripOwnerId)
+            .Child(tripId)
+            .Child(tripRequest.Id)
+            .PutAsync(JsonSerializer.Serialize(tripRequest));
+    }
+    
+    public IObservable<FirebaseEvent<TripRequest>> ObserveTripRequests(string tripId)
+    {
+        return FirebaseDatabase
+            .Child(FirebaseConstants.TripRequests)
+            .Child(_firebaseAuthClient.User.Uid)
+            .Child(tripId)
+            .AsObservable<TripRequest>();
+    }
+
+    public async Task<IEnumerable<TripRequest>?> FetchTripRequests(string tripId)
+    {
+        var tripRequestsJson = await FirebaseDatabase
+            .Child(FirebaseConstants.TripRequests)
+            .Child(_firebaseAuthClient.User.Uid)
+            .Child(tripId)
+            .OnceAsJsonAsync();
+        return JsonSerializer.Deserialize<Dictionary<string, TripRequest>>(tripRequestsJson)?.Values;
+    }
+
+    public async Task UpdateTripRequestData(TripRequest tripRequest)
+    {
+        await FirebaseDatabase
+            .Child(FirebaseConstants.TripRequests)
+            .Child(tripRequest.TripOwnerId)
+            .Child(tripRequest.TripId)
+            .Child(tripRequest.Id)
+            .PatchAsync(JsonSerializer.Serialize(tripRequest));
     }
 }

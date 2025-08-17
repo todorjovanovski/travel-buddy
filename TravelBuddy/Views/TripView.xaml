@@ -2,7 +2,9 @@
 
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:models="clr-namespace:TravelBuddy.Models"
+             xmlns:dtOs="clr-namespace:TravelBuddy.Models.DTOs"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:views="clr-namespace:TravelBuddy.Views"
              x:Class="TravelBuddy.Views.TripView"
              x:Name="ThisView">
     
@@ -12,62 +14,108 @@
         Stroke="{Binding }"
         BindingContext="{x:Reference ThisView}"
         BackgroundColor="{Binding FillColor}">
-        <VerticalStackLayout
-            Padding="10">
-            <Image Source="{Binding Trip.TripImageSource}"/>
-            <Label 
-                Text="{Binding Trip.Title}"
-                FontSize="20"
-                FontFamily="PoppinsRegular"/>
-            <Label
-                Text="{Binding Trip.Destination}"
-                FontSize="20"
-                FontFamily="PoppinsRegular"/>
-            <Label
-                Text="{Binding Trip.Date}"
-                FontSize="20"
-                FontFamily="PoppinsRegular"/>
-            <Label
-                Text="{Binding Trip.Budget}"
-                FontSize="20"
-                FontFamily="PoppinsRegular"/>
-            <Label
-                Text="{Binding Trip.AdditionalInfo}"
-                FontSize="20"
-                FontFamily="PoppinsRegular"/>
-            <Label
-                Text="Participants"
-                FontSize="20"
-                FontFamily="PoppinsRegular"/>
-            <CollectionView
-                ItemsSource="{Binding Trip.Participants}">
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout 
-                        Span="3"
-                        Orientation="Horizontal"
-                        HorizontalItemSpacing="10"
-                        VerticalItemSpacing="10"/>
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:Participant">
-                        <VerticalStackLayout>
-                            <Border
-                                StrokeThickness="0"
-                                StrokeShape="RoundRectangle 30">
-                                <Image Source="{Binding ProfileImageSource}"/>
-                            </Border>
+        <Grid>
+            <VerticalStackLayout
+                Padding="10">
+                <Image Source="{Binding Trip.TripImageSource}"/>
+                <Grid
+                    ColumnDefinitions="4*, 1*">
+                    <Label 
+                        Text="{Binding Trip.Title}"
+                        FontSize="20"
+                        FontFamily="PoppinsRegular"
+                        VerticalTextAlignment="Center"/>
+                    <Grid Column="1"
+                          IsVisible="{Binding Trip.IsCurrentUserTripOwner}">
+                        <ImageButton
+                            Padding="5"
+                            HorizontalOptions="End"
+                            BackgroundColor="White"
+                            CornerRadius="20"
+                            Source="person"
+                            Command="{Binding ToggleRequestsCommand}"
+                            CommandParameter="{Binding Trip.TripId}">
+                            <Image.Behaviors>
+                                <toolkit:IconTintColorBehavior TintColor="Black"/>
+                            </Image.Behaviors>
+                        </ImageButton>
+                        <Border
+                            HorizontalOptions="End"
+                            Margin="20, 20, 0, 0"
+                            StrokeThickness="0"
+                            StrokeShape="Ellipse"
+                            WidthRequest="15"
+                            HeightRequest="15"
+                            BackgroundColor="{StaticResource Primary}"
+                            IsVisible="{Binding Trip.IsRequestsCountVisible}">
                             <Label
-                                Text="{Binding Name}"
-                                TextColor="{StaticResource Gray600}"
-                                FontSize="10"
-                                FontFamily="PoppinsRegular"
+                                Text="{Binding Trip.PendingRequests}"
                                 HorizontalTextAlignment="Center"
-                                VerticalTextAlignment="Center"/>
-                        </VerticalStackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </VerticalStackLayout>
+                                VerticalTextAlignment="Center"
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                FontSize="10"/>
+                        </Border>
+                    </Grid>
+                </Grid>
+                <Label
+                    Text="{Binding Trip.Destination}"
+                    FontSize="20"
+                    FontFamily="PoppinsRegular"/>
+                <Label
+                    Text="{Binding Trip.Date}"
+                    FontSize="20"
+                    FontFamily="PoppinsRegular"/>
+                <Label
+                    Text="{Binding Trip.Budget}"
+                    FontSize="20"
+                    FontFamily="PoppinsRegular"/>
+                <Label
+                    Text="{Binding Trip.AdditionalInfo}"
+                    FontSize="20"
+                    FontFamily="PoppinsRegular"/>
+                <Label
+                    Text="Participants"
+                    FontSize="20"
+                    FontFamily="PoppinsRegular"/>
+                <CollectionView
+                    ItemsSource="{Binding Trip.Participants}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout 
+                            Span="3"
+                            Orientation="Horizontal"
+                            HorizontalItemSpacing="10"
+                            VerticalItemSpacing="10"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="dtOs:Participant">
+                            <VerticalStackLayout>
+                                <Border
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 30">
+                                    <Image Source="{Binding ProfileImageSource}"/>
+                                </Border>
+                                <Label
+                                    Text="{Binding Name}"
+                                    TextColor="{StaticResource Gray600}"
+                                    FontSize="10"
+                                    FontFamily="PoppinsRegular"
+                                    HorizontalTextAlignment="Center"
+                                    VerticalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <Button
+                    Text="Delete trip"
+                    Command="{Binding DeleteTripCommand}"
+                    CommandParameter="{Binding Trip.TripId}"
+                    BackgroundColor="{StaticResource Primary}"
+                    FontFamily="PoppinsRegular"
+                    FontAttributes="Bold"
+                    VerticalOptions="End"/>
+            </VerticalStackLayout>
+        </Grid>
     </Border>
      
 </ContentView>

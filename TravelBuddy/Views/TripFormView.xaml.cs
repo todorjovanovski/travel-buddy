@@ -1,5 +1,5 @@
 using System.Windows.Input;
-using TravelBuddy.Models;
+using TravelBuddy.Models.DTOs;
 
 namespace TravelBuddy.Views;
 

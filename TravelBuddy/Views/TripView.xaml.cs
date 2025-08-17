@@ -1,4 +1,5 @@
-using TravelBuddy.Models;
+using System.Windows.Input;
+using TravelBuddy.Models.DTOs;
 
 namespace TravelBuddy.Views;
 
@@ -25,5 +26,23 @@ public partial class TripView : ContentView
     {
         get => (Color)GetValue(FillColorProperty);
         set => SetValue(FillColorProperty, value);
+    }
+    
+    public static readonly BindableProperty DeleteTripCommandProperty = 
+        BindableProperty.Create(nameof(DeleteTripCommand), typeof(ICommand), typeof(TripView));
+
+    public ICommand DeleteTripCommand
+    {
+        get => (ICommand)GetValue(DeleteTripCommandProperty);
+        set => SetValue(DeleteTripCommandProperty, value);
+    }
+    
+    public static readonly BindableProperty ToggleRequestsCommandProperty = 
+        BindableProperty.Create(nameof(ToggleRequestsCommand), typeof(ICommand), typeof(TripView));
+
+    public ICommand ToggleRequestsCommand
+    {
+        get => (ICommand)GetValue(ToggleRequestsCommandProperty);
+        set => SetValue(ToggleRequestsCommandProperty, value);
     }
 }

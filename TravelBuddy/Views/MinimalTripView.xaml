@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:dtOs="clr-namespace:TravelBuddy.Models.DTOs"
+             x:Class="TravelBuddy.Views.MinimalTripView"
+             x:Name="ThisView">
+    
+    <Border
+        StrokeThickness="1"
+        StrokeShape="RoundRectangle 20"
+        Stroke="{Binding }"
+        BindingContext="{x:Reference ThisView}"
+        BackgroundColor="{Binding FillColor}">
+        <VerticalStackLayout
+            Padding="10">
+            <Image Source="{Binding Trip.TripImageSource}"/>
+            <Label 
+                Text="{Binding Trip.Title}"
+                FontSize="20"
+                FontFamily="PoppinsRegular"/>
+            <Label
+                Text="{Binding Trip.Destination}"
+                FontSize="20"
+                FontFamily="PoppinsRegular"/>
+            <Label
+                Text="{Binding Trip.Date}"
+                FontSize="20"
+                FontFamily="PoppinsRegular"/>
+            <Label
+                Text="{Binding Trip.Budget}"
+                FontSize="20"
+                FontFamily="PoppinsRegular"/>
+            <Label
+                Text="{Binding Trip.AdditionalInfo}"
+                FontSize="20"
+                FontFamily="PoppinsRegular"/>
+            <Label
+                Text="Participants"
+                FontSize="20"
+                FontFamily="PoppinsRegular"/>
+            <CollectionView
+                ItemsSource="{Binding Trip.Participants}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout 
+                        Span="3"
+                        Orientation="Horizontal"
+                        HorizontalItemSpacing="10"
+                        VerticalItemSpacing="10"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dtOs:Participant">
+                        <VerticalStackLayout>
+                            <Border
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 30">
+                                <Image Source="{Binding ProfileImageSource}"/>
+                            </Border>
+                            <Label
+                                Text="{Binding Name}"
+                                TextColor="{StaticResource Gray600}"
+                                FontSize="10"
+                                FontFamily="PoppinsRegular"
+                                HorizontalTextAlignment="Center"
+                                VerticalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Button
+                Text="Request to join trip"
+                Command="{Binding RequestToJoinTripCommand}"
+                CommandParameter="{Binding Trip}"
+                BackgroundColor="{StaticResource Primary}"/>
+        </VerticalStackLayout>
+    </Border>
+    
+</ContentView>

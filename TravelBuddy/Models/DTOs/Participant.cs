@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace TravelBuddy.Models;
+namespace TravelBuddy.Models.DTOs;
 
 public partial class Participant : ObservableObject
 {

@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Firebase.Auth;
 using TravelBuddy.Models;
+using TravelBuddy.Models.Enums;
 using TravelBuddy.Services.Interfaces;
 using TravelBuddy.Utils;
 using TravelBuddy.ViewModels.Base;
@@ -62,14 +63,14 @@ public partial class CreateTripViewModel : ViewModelBase
     [RelayCommand]
     private async Task CreateNewTrip()
     {
-        LoggedInUser = (await _firebaseDbService.FetchLoggedInUser())!;
         var destination = Destination.Split(",");
         var selectedBudget = SelectedBudget.FromDescription<Budget>();
         var selectedGroupSize = SelectedGroupSize.FromDescription<GroupSize>();
+        var tripChat = new Chat { Title = Title };
         var trip = new Trip
         {
-            Id = Guid.NewGuid(),
             OwnerId = _firebaseAuthClient.User.Uid,
+            ChatId = tripChat.Id,
             Title = Title,
             StartDate = StartDate,
             EndDate = EndDate,
@@ -85,6 +86,7 @@ public partial class CreateTripViewModel : ViewModelBase
         {
             LoggedInUser.TripIds.Add(trip.Id);
             await _firebaseDbService.CreateTrip(trip);
+            await _firebaseDbService.CreateChat(tripChat);
             await _firebaseDbService.UpdateUserData(LoggedInUser);
             await _navigationService.GoBackAsync();
         }
@@ -92,5 +94,11 @@ public partial class CreateTripViewModel : ViewModelBase
         {
             Console.WriteLine(e);
         }
+    }
+
+    protected override async Task OnAppearingAsync()
+    {
+        LoggedInUser = (await _firebaseDbService.FetchLoggedInUser())!;
+        await base.OnAppearingAsync();
     }
 }

@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using TravelBuddy.Models;
+using TravelBuddy.Models.Enums;
 using TravelBuddy.Services.Interfaces;
 using TravelBuddy.ViewModels.Base;
 using Location = TravelBuddy.Models.Location;
