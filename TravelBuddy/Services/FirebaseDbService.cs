@@ -4,6 +4,7 @@ using Firebase.Database;
 using Firebase.Database.Query;
 using Firebase.Database.Streaming;
 using Firebase.Storage;
+using OpenAI.Chat;
 using TravelBuddy.Constants;
 using TravelBuddy.Models;
 using TravelBuddy.Services.Interfaces;
@@ -165,7 +166,25 @@ public class FirebaseDbService : IFirebaseDbService
             .PutAsync(JsonSerializer.Serialize(chat));
     }
 
-    public async Task<Chat> FetchCurrentChat(string chatId)
+    public async Task CreateTourGuideChat(TourGuideChat chat)
+    {
+        var assistantMessage = new AssistantChatMessage("Feel free to ask me anything about your trip. I can help you with recommendations, itinerary planning, and more!");
+        var tourGuideIntroMessage = new TourGuideMessage
+        {
+            ChatId = chat.Id,
+            ChatMessage = assistantMessage.Content.First().Text,
+            SenderId = TourGuideConstants.BotId,
+            Time = DateTime.UtcNow
+        };
+        chat.Messages.Add(tourGuideIntroMessage);
+        await FirebaseDatabase
+            .Child(FirebaseConstants.TourGuideChats)
+            .Child(chat.Id)
+            .Child(FirebaseConstants.TourGuideChats)
+            .PutAsync(JsonSerializer.Serialize(chat));
+    }
+
+    public async Task<Chat> FetchChat(string chatId)
     {
         var chatJson = await FirebaseDatabase
             .Child(FirebaseConstants.Chats)
@@ -173,6 +192,16 @@ public class FirebaseDbService : IFirebaseDbService
             .Child(FirebaseConstants.Chat)
             .OnceAsJsonAsync();
         return JsonSerializer.Deserialize<Chat>(chatJson)!;
+    }
+
+    public async Task<TourGuideChat> FetchTourGuideChat(string chatId)
+    {
+        var chatJson = await FirebaseDatabase
+            .Child(FirebaseConstants.TourGuideChats)
+            .Child(chatId)
+            .Child(FirebaseConstants.TourGuideChats)
+            .OnceAsJsonAsync();
+        return JsonSerializer.Deserialize<TourGuideChat>(chatJson)!;
     }
 
     public IObservable<FirebaseEvent<Chat>> ObserveChatChanges(string chatId)
@@ -183,13 +212,13 @@ public class FirebaseDbService : IFirebaseDbService
             .AsObservable<Chat>();
     }
 
-    public async Task SendMessage(string message, Chat chat)
+    public async Task SendMessage(string message, Chat chat, bool isBot)
     {
         var newMessage = new Message
         {
             ChatId = chat.Id,
             Content = message,
-            SenderId = _firebaseAuthClient.User.Uid,
+            SenderId = isBot ? TourGuideConstants.BotId : _firebaseAuthClient.User.Uid,
             Time = DateTime.UtcNow
         };
         chat.Messages.Add(newMessage);
@@ -199,6 +228,16 @@ public class FirebaseDbService : IFirebaseDbService
             .Child(FirebaseConstants.Chats)
             .Child(chat.Id)
             .Child(FirebaseConstants.Chat)
+            .PatchAsync(serializedChat);
+    }
+
+    public async Task InsertTourGuideInteraction(TourGuideChat chat)
+    {
+        var serializedChat = JsonSerializer.Serialize(chat);
+        await FirebaseDatabase
+            .Child(FirebaseConstants.TourGuideChats)
+            .Child(chat.Id)
+            .Child(FirebaseConstants.TourGuideChats)
             .PatchAsync(serializedChat);
     }
 

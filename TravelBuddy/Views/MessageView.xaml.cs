@@ -1,5 +1,9 @@
+using System.ComponentModel;
+using System.Windows.Input;
 using Microsoft.Maui.Controls.Shapes;
 using TravelBuddy.Models.DTOs;
+using TravelBuddy.Utils;
+using TravelBuddy.ViewModels;
 
 namespace TravelBuddy.Views;
 
@@ -28,12 +32,22 @@ public partial class MessageView : ContentView
         set => SetValue(IsDateSentVisibleProperty, value);
     }
 
+    public static readonly BindableProperty ForwardToGroupChatCommandProperty = 
+        BindableProperty.Create(nameof(ForwardToGroupChatCommand), typeof(ICommand), typeof(MessageView));
+
+    public ICommand ForwardToGroupChatCommand
+    {
+        get => (ICommand)GetValue(ForwardToGroupChatCommandProperty);
+        set => SetValue(ForwardToGroupChatCommandProperty, value);
+    }
+    
     private static void OnMessageChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var messageView = (MessageView)bindable;
         if (newValue is not ChatMessage message) return;
         if (message.SenderId == message.CurrentUserId)
         {
+            messageView.ForwardButton.IsVisible = false;
             messageView.MessageBorder.StrokeShape = new RoundRectangle { CornerRadius = new CornerRadius(10, 10, 10, 0) };
             messageView.MessageTextLabel.HorizontalTextAlignment = TextAlignment.End;
             messageView.MessageStackLayout.HorizontalOptions = LayoutOptions.End;
@@ -42,6 +56,7 @@ public partial class MessageView : ContentView
         }
         else
         {
+            messageView.ForwardButton.IsVisible = messageView.Parent?.BindingContext is TourGuideViewModel;
             messageView.MessageBorder.StrokeShape = new RoundRectangle { CornerRadius = new CornerRadius(10, 10, 0, 10) };
             messageView.MessageTextLabel.HorizontalTextAlignment = TextAlignment.Start;
             messageView.MessageStackLayout.HorizontalOptions = LayoutOptions.Start;
@@ -57,5 +72,6 @@ public partial class MessageView : ContentView
         DateSentLabel.TextColor = Colors.DimGray;
         DateSentLabel.Padding = new Thickness(3);
         IsDateSentVisible = !IsDateSentVisible;
+        MessageUpdated.Raise(Message, EventArgs.Empty);
     }
 }

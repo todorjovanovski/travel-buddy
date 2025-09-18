@@ -48,6 +48,7 @@ public static class MauiProgram
         builder.Services.AddTransientWithShellRoute<CompleteProfilePage, CompleteProfileViewModel>(nameof(CompleteProfilePage));
         builder.Services.AddTransientWithShellRoute<CreateTripPage, CreateTripViewModel>(nameof(CreateTripPage));
         builder.Services.AddTransientWithShellRoute<ChatPage, ChatViewModel>(nameof(ChatPage));
+        builder.Services.AddTransientWithShellRoute<TourGuidePage, TourGuideViewModel>(nameof(TourGuidePage));
 
         return builder;
     }

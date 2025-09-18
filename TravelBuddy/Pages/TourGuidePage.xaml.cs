@@ -5,9 +5,9 @@ using TravelBuddy.ViewModels;
 
 namespace TravelBuddy.Pages;
 
-public partial class ChatPage : ContentPageBase
+public partial class TourGuidePage : ContentPageBase
 {
-    public ChatPage(ChatViewModel viewModel)
+    public TourGuidePage(TourGuideViewModel viewModel)
     {
         BindingContext = viewModel;
         InitializeComponent();
@@ -19,11 +19,11 @@ public partial class ChatPage : ContentPageBase
         var message = sender as ChatMessage;
         Messages.ScrollTo(message, position: ScrollToPosition.End);
     }
-
+    
     protected override void OnNavigatedTo(NavigatedToEventArgs args)
     {
         base.OnNavigatedTo(args);
-        var viewModel = BindingContext as ChatViewModel;
+        var viewModel = BindingContext as TourGuideViewModel;
         if (viewModel!.Messages.Count == 0) return;
         Messages.ScrollTo(viewModel.Messages.LastOrDefault(), animate: false, position: ScrollToPosition.End);
     }

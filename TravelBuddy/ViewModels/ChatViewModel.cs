@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TravelBuddy.Models;
 using TravelBuddy.Models.DTOs;
+using TravelBuddy.Pages;
 using TravelBuddy.Services.Interfaces;
 using TravelBuddy.Utils;
 using TravelBuddy.ViewModels.Base;
@@ -70,10 +71,19 @@ public partial class ChatViewModel : ViewModelBase, IQueryAttributable
         }
     }
 
+    [RelayCommand]
+    private async Task GoToTourGuideChat()
+    {
+        await _navigationService.GoToAsync(nameof(TourGuidePage), new Dictionary<string, object>
+        {
+            { nameof(TourGuideViewModel.ChatId), ChatId }
+        });
+    }
+
     protected override async Task OnAppearingAsync()
     {
         LoggedInUser = (await _firebaseDbService.FetchLoggedInUser())!;
-        Chat = await _firebaseDbService.FetchCurrentChat(ChatId);
+        Chat = await _firebaseDbService.FetchChat(ChatId);
         Title = Chat.Title;
         Messages = Chat.Messages.Select(m => new ChatMessage
         {

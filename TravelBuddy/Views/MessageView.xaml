@@ -4,26 +4,57 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Name="ThisView"
              x:Class="TravelBuddy.Views.MessageView">
-    
-    <VerticalStackLayout x:Name="MessageStackLayout" 
-                         Margin="0, 5"
-                         BindingContext="{x:Reference ThisView}">
-        <Border x:Name="MessageBorder" Padding="10"
-                BackgroundColor="White" Stroke="Transparent">
-            <Label x:Name="MessageTextLabel" 
-                   Text="{Binding Message.MessageText}"/>
-            <Border.Shadow>
-                <Shadow Brush="Black"
+    <Grid
+        BindingContext="{x:Reference ThisView}"
+        ColumnDefinitions="*, Auto">
+        <VerticalStackLayout
+            x:Name="MessageStackLayout" 
+            Margin="0, 5">
+            <Border 
+                x:Name="MessageBorder" 
+                Padding="10"
+                BackgroundColor="White" 
+                Stroke="Transparent">
+                <Label 
+                    x:Name="MessageTextLabel" 
+                    Text="{Binding Message.MessageText}"/>
+                <Border.Shadow>
+                    <Shadow 
+                        Brush="Black"
                         Offset="0, 4"
                         Radius="2"
                         Opacity="0.3"/>
+                </Border.Shadow>
+            </Border>
+            <Label 
+                x:Name="DateSentLabel"
+                IsVisible="{Binding IsDateSentVisible}" />
+            <VerticalStackLayout.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnMessageTapped"/>
+            </VerticalStackLayout.GestureRecognizers>
+        </VerticalStackLayout>
+        <Border 
+            Grid.Column="1"
+            x:Name="ForwardButton"
+            Stroke="Transparent" 
+            StrokeShape="RoundRectangle 20" 
+            VerticalOptions="Center" 
+            BackgroundColor="White"
+            Margin="10, 5, 0, 5"
+            Padding="10">
+            <Image Source="forward"/>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer 
+                    Command="{Binding ForwardToGroupChatCommand}"
+                    CommandParameter="{Binding Message}"/>
+            </Border.GestureRecognizers>
+            <Border.Shadow>
+                <Shadow 
+                    Brush="Black"
+                    Offset="0, 4"
+                    Radius="2"
+                    Opacity="0.3"/>
             </Border.Shadow>
         </Border>
-        <Label x:Name="DateSentLabel"
-               IsVisible="{Binding IsDateSentVisible}" />
-        <VerticalStackLayout.GestureRecognizers>
-            <TapGestureRecognizer Tapped="OnMessageTapped"/>
-        </VerticalStackLayout.GestureRecognizers>
-    </VerticalStackLayout>
-    
+    </Grid>
 </ContentView>

@@ -67,6 +67,7 @@ public partial class CreateTripViewModel : ViewModelBase
         var selectedBudget = SelectedBudget.FromDescription<Budget>();
         var selectedGroupSize = SelectedGroupSize.FromDescription<GroupSize>();
         var tripChat = new Chat { Title = Title };
+        var tourGuideChat = new TourGuideChat { Id = tripChat.Id, Title = "Your virtual tour guide" };
         var trip = new Trip
         {
             OwnerId = _firebaseAuthClient.User.Uid,
@@ -87,6 +88,7 @@ public partial class CreateTripViewModel : ViewModelBase
             LoggedInUser.TripIds.Add(trip.Id);
             await _firebaseDbService.CreateTrip(trip);
             await _firebaseDbService.CreateChat(tripChat);
+            await _firebaseDbService.CreateTourGuideChat(tourGuideChat);
             await _firebaseDbService.UpdateUserData(LoggedInUser);
             await _navigationService.GoBackAsync();
         }

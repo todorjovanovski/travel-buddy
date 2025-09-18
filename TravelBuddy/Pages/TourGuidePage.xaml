@@ -4,18 +4,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:base="clr-namespace:TravelBuddy.Pages.Base"
              xmlns:converters="clr-namespace:TravelBuddy.Converters"
-             xmlns:viewModels="clr-namespace:TravelBuddy.ViewModels"
-             xmlns:controls="clr-namespace:TravelBuddy.Controls"
              xmlns:views="clr-namespace:TravelBuddy.Views"
+             xmlns:controls="clr-namespace:TravelBuddy.Controls"
              xmlns:dtOs="clr-namespace:TravelBuddy.Models.DTOs"
-             x:Class="TravelBuddy.Pages.ChatPage"
+             xmlns:viewModels="clr-namespace:TravelBuddy.ViewModels"
              Background="{StaticResource Secondary}"
-             x:DataType="viewModels:ChatViewModel">
+             x:DataType="viewModels:TourGuideViewModel"
+             x:Class="TravelBuddy.Pages.TourGuidePage">
     
     <base:ContentPageBase.Resources>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </base:ContentPageBase.Resources>
-    
    
     <Border 
         BackgroundColor="AliceBlue" 
@@ -26,7 +25,7 @@
             RowDefinitions="1*, 9*" 
             Margin="10">
             <Grid 
-                ColumnDefinitions="1*, 7*, 2*" 
+                ColumnDefinitions="1*, 9*" 
                 HorizontalOptions="Fill">
                 <ImageButton
                     Source="back" 
@@ -40,13 +39,6 @@
                     VerticalTextAlignment="Center"
                     Text="{Binding Title}" 
                     FontSize="20"/>
-                
-                <ImageButton
-                    Grid.Column="2"
-                    Source="note"
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center"
-                    Command="{Binding GoToTourGuideChatCommand}"/>
             </Grid>
             <Grid 
                 Grid.Row="1" 
@@ -80,7 +72,9 @@
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="dtOs:ChatMessage">
                             <views:MessageView
-                                Message="{Binding .}" />
+                                Message="{Binding .}"
+                                ForwardToGroupChatCommand="{Binding ForwardToGroupChatCommand, 
+                                Source={x:RelativeSource AncestorType={x:Type viewModels:TourGuideViewModel}}}"/>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
@@ -136,5 +130,4 @@
             </Grid>
         </Grid>
     </Border>      
-        
 </base:ContentPageBase>

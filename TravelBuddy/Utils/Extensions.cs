@@ -197,4 +197,15 @@ public static class Extensions
             return false;
         return true;
     }
+
+    public static TourGuideMessage ToTourGuideMessage(this ChatMessage chatMessage, string chatId)
+    {
+        return new TourGuideMessage
+        {
+            ChatId = chatId,
+            ChatMessage = chatMessage.MessageText,
+            SenderId = chatMessage.SenderId,
+            Time = chatMessage.DateSent
+        };
+    }
 }

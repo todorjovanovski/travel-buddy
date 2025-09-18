@@ -19,9 +19,12 @@ public interface IFirebaseDbService
     public Task<Trip> FetchTrip(string tripId);
     public Task<IEnumerable<Trip>> FetchTrips(TripForm? tripForm = null);
     public Task CreateChat(Chat chat);
-    public Task<Chat> FetchCurrentChat(string chatId);
+    public Task CreateTourGuideChat(TourGuideChat tripChat);
+    public Task<Chat> FetchChat(string chatId);
+    public Task<TourGuideChat> FetchTourGuideChat(string chatId);
     public IObservable<FirebaseEvent<Chat>> ObserveChatChanges(string chatId);
-    public Task SendMessage(string message, Chat chat);
+    public Task SendMessage(string message, Chat chat, bool isBot = false);
+    public Task InsertTourGuideInteraction(TourGuideChat chat);
     public Task DeleteTrip(string tripId);
     public Task RequestToJoinTrip(string tripId, string tripOwnerId, User requestingUser);
     public IObservable<FirebaseEvent<TripRequest>> ObserveTripRequests(string tripId);
